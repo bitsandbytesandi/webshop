@@ -1,6 +1,6 @@
 import Stripe from "stripe"
 
-let_stripe: Stripe | null = null
+let _stripe: Stripe | null = null
 
 export function getStripe() {
   if (!_stripe) {
@@ -8,13 +8,14 @@ export function getStripe() {
       throw new Error("STRIPE_SECRET_KEY is missing in environment variables")
     }
     _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2025-08-27.basil",
-      typeScript: true,
+      apiVersion: "2026-09-30.endive",
+      typescript: true,
     })
-  } 
-  return_stripe
+  }
+  return _stripe
 }
 
+// Proxy so existing `stripe.xxx` calls still work
 export const stripe = new Proxy({} as Stripe, {
   get(_, prop) {
     return (getStripe() as any)[prop]

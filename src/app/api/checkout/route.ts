@@ -28,7 +28,8 @@ export async function POST(req: Request) {
     }))
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "ideal"], // iDEAL is handig voor NL
+      // Nieuwe manier (Endive API) – payment_method_types is verwijderd
+      allowed_payment_method_types: ["card", "ideal"],
       line_items,
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,

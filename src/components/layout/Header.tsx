@@ -41,7 +41,6 @@ export function Header() {
           <Link href="/products" className="transition-colors hover:text-foreground/80">
             Producten
           </Link>
-          <Link href="/collections" className="transition-colors hover:text-foreground/80">
             Collecties
           </Link>
           <Link href="/about" className="transition-colors hover:text-foreground/80">
@@ -92,7 +91,6 @@ export function Header() {
                   Producten
                 </Link>
                 <Link
-                  href="/collections"
                   className="text-lg font-medium transition-colors hover:text-primary"
                 >
                   Collecties

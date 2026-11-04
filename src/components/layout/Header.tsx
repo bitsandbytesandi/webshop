@@ -41,10 +41,11 @@ export function Header() {
           <Link href="/products" className="transition-colors hover:text-foreground/80">
             Producten
           </Link>
-            Collecties
-          </Link>
           <Link href="/about" className="transition-colors hover:text-foreground/80">
             Over ons
+          </Link>
+          <Link href="/contact" className="transition-colors hover:text-foreground/80">
+            Contact
           </Link>
         </nav>
 
@@ -62,7 +63,7 @@ export function Header() {
             </Button>
           </Link>
 
-          {/* Mobile Menu - Correct Base UI syntax */}
+          {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger
               render={
@@ -91,15 +92,16 @@ export function Header() {
                   Producten
                 </Link>
                 <Link
-                  className="text-lg font-medium transition-colors hover:text-primary"
-                >
-                  Collecties
-                </Link>
-                <Link
                   href="/about"
                   className="text-lg font-medium transition-colors hover:text-primary"
                 >
                   Over ons
+                </Link>
+                <Link
+                  href="/contact"
+                  className="text-lg font-medium transition-colors hover:text-primary"
+                >
+                  Contact
                 </Link>
                 <Link
                   href="/cart"
@@ -115,3 +117,4 @@ export function Header() {
     </header>
   )
 }
+

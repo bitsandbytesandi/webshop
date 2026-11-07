@@ -3,7 +3,6 @@
 @custom-variant dark (&:is(.dark *));
 @import "./tw-animate.css";
 
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -127,4 +126,52 @@
   html {
     @apply font-sans;
   }
+}
+
+/* ===== DEVELOPER GOLD LAYER ===== */
+@keyframes goldPulse {
+  0%, 100% {
+    background-position: 0% center;
+    filter: brightness(1);
+  }
+  50% {
+    background-position: 100% center;
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(24px, -32px) scale(1.04); }
+  66% { transform: translate(-18px, 16px) scale(0.98); }
+}
+
+@keyframes float-slower {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-28px, -20px) scale(1.05); }
+}
+
+.animate-gold-pulse {
+  background: linear-gradient(110deg, #8e6d37, #f4dca6, #c9a45c, #f5dfaa, #8e6d37);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: goldPulse 4.5s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 18s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float-slower 24s ease-in-out infinite;
+}
+
+/* Subtiel developer raster */
+.dev-raster {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 52px 52px;
 }

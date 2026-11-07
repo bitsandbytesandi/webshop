@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>netkit :: terminal toolbox</title>
+<style>
+  :root{
+    --bg: #0a0e0c;
+    --panel: #0f1512;
+    --line: #1c2b23;
+    --fg: #c9f5d8;
+    --fg-dim: #6f9a80;
+    --accent: #39ff88;
+    --accent-dim: #1f7a48;
+    --warn: #ffb454;
+    --err: #ff5f5f;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, "SF Mono", Consolas, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at top left, rgba(57,255,136,0.05), transparent 60%),
+      var(--bg);
+    color:var(--fg);
+    font-family:var(--mono);
+    min-height:100vh;
+    padding:24px 16px 60px;
+  }
+  .scanlines{
+    pointer-events:none;
+    position:fixed; inset:0;
+    background:repeating-linear-gradient(
+      to bottom, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px,
+      transparent 1px, transparent 3px
+    );
+    mix-blend-mode:overlay;
+    z-index:50;
+  }
+  .wrap{max-width:960px; margin:0 auto;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    padding-bottom:16px;
+    margin-bottom:20px;
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:10px;
+  }
+  .brand{display:flex; align-items:baseline; gap:10px;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent); animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1} 50%{opacity:.35}}
+  h1{font-size:18px; margin:0; letter-spacing:1px; font-weight:600;}
+  h1 span{color:var(--accent);}
+  .sub{color:var(--fg-dim); font-size:12px;}
+  .clock{color:var(--fg-dim); font-size:12px; text-align:right;}
+  .clock b{color:var(--fg);}
+
+  nav{
+    display:flex; gap:2px; margin-bottom:18px; flex-wrap:wrap;
+    border:1px solid var(--line); background:var(--panel); border-radius:6px; padding:4px;
+  }
+  nav button{
+    flex:1; min-width:120px;
+    background:transparent; border:none; color:var(--fg-dim);
+    font-family:var(--mono); font-size:12px; letter-spacing:.5px;
+    padding:9px 10px; border-radius:4px; cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  nav button:hover{color:var(--fg); background:rgba(255,255,255,0.03);}
+  nav button.active{
+    background:rgba(57,255,136,0.09); color:var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent-dim);
+  }
+
+  .panel{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, var(--panel), #0b100d);
+    border-radius:8px;
+    padding:20px;
+    display:none;
+    animation:fade .18s ease;
+  }
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(3px)} to{opacity:1; transform:none}}
+
+  .panel h2{
+    font-size:13px; text-transform:uppercase; letter-spacing:1.5px;
+    color:var(--fg-dim); margin:0 0 14px; display:flex; align-items:center; gap:8px;
+  }
+  .panel h2::before{content:"//"; color:var(--accent-dim);}
+
+  label{display:block; font-size:11px; color:var(--fg-dim); margin-bottom:5px; letter-spacing:.5px;}
+  input[type=text], input[type=number], select, textarea{
+    width:100%; background:#070a08; border:1px solid var(--line); color:var(--fg);
+    font-family:var(--mono); font-size:13px; padding:9px 10px; border-radius:5px;
+    outline:none; transition:border-color .15s;
+  }
+  textarea{resize:vertical; min-height:80px;}
+  input:focus, select:focus, textarea:focus{border-color:var(--accent-dim);}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;}
+  .row.single{grid-template-columns:1fr;}
+  @media (max-width:560px){.row{grid-template-columns:1fr;}}
+
+  .btn{
+    background:var(--accent); color:#04140a; border:none; font-family:var(--mono);
+    font-weight:700; font-size:12px; letter-spacing:.5px; padding:10px 16px;
+    border-radius:5px; cursor:pointer; margin-top:6px; text-transform:uppercase;
+    transition:filter .15s, transform .1s;
+  }
+  .btn:hover{filter:brightness(1.15);}
+  .btn:active{transform:scale(.98);}
+  .btn.ghost{
+    background:transparent; color:var(--fg-dim); border:1px solid var(--line);
+    font-weight:600; margin-left:8px;
+  }
+  .btn.ghost:hover{color:var(--fg); border-color:var(--accent-dim);}
+
+  .output{
+    margin-top:16px; border:1px solid var(--line); border-radius:6px;
+    background:#070a08; padding:14px; font-size:12.5px; line-height:1.7;
+    white-space:pre-wrap; word-break:break-all; min-height:40px;
+    max-height:340px; overflow:auto;
+  }
+  .output .k{color:var(--fg-dim);}
+  .output .v{color:var(--fg);}
+  .output .accent{color:var(--accent);}
+  .output .warn{color:var(--warn);}
+  .output .err{color:var(--err);}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:2px 18px;}
+  @media (max-width:560px){.grid2{grid-template-columns:1fr;}}
+
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  th,td{text-align:left; padding:7px 8px; border-bottom:1px solid var(--line);}
+  th{color:var(--fg-dim); font-weight:600; text-transform:uppercase; font-size:10.5px; letter-spacing:.5px;}
+  tr:hover td{background:rgba(57,255,136,0.04);}
+  .badge{
+    display:inline-block; font-size:10px; padding:2px 6px; border-radius:3px;
+    background:rgba(57,255,136,0.1); color:var(--accent); border:1px solid var(--accent-dim);
+  }
+  .badge.udp{background:rgba(255,180,84,0.1); color:var(--warn); border-color:#5a4623;}
+  .badge.both{background:rgba(160,160,255,0.1); color:#a0a0ff; border-color:#33336b;}
+
+  .copybar{display:flex; justify-content:flex-end; gap:8px; margin-top:8px;}
+  .toast{
+    position:fixed; bottom:20px; right:20px; background:var(--panel);
+    border:1px solid var(--accent-dim); color:var(--accent); padding:10px 16px;
+    border-radius:6px; font-size:12px; transform:translateY(20px); opacity:0;
+    transition:all .25s; pointer-events:none; z-index:100;
+  }
+  .toast.show{transform:translateY(0); opacity:1;}
+  footer{margin-top:24px; color:var(--fg-dim); font-size:11px; text-align:center;}
+  ::-webkit-scrollbar{width:8px; height:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="brand"><span class="dot"></span><h1>net<span>kit</span> // toolbox</h1></div>
+      <div class="sub">local-only · zero deps · nothing leaves this tab</div>
+    </div>
+    <div class="clock">local time <b id="clockval">--:--:--</b></div>
+  </header>
+
+  <nav id="tabs">
+    <button data-tab="subnet" class="active">subnet calc</button>
+    <button data-tab="hash">hash gen</button>
+    <button data-tab="encode">encode/decode</button>
+    <button data-tab="ports">port lookup</button>
+    <button data-tab="pw">pw entropy</button>
+  </nav>
+
+  <!-- SUBNET CALCULATOR -->
+  <section class="panel active" id="panel-subnet">
+    <h2>ipv4 subnet calculator</h2>
+    <div class="row">
+      <div>
+        <label>ip address / cidr (e.g. 192.168.1.10/24)</label>
+        <input type="text" id="subnetInput" value="192.168.1.10/24" spellcheck="false">
+      </div>
+      <div style="display:flex; align-items:flex-end;">
+        <button class="btn" onclick="calcSubnet()">calculate</button>
+      </div>
+    </div>
+    <div class="output" id="subnetOut">// awaiting input</div>
+  </section>
+
+  <!-- HASH GENERATOR -->
+  <section class="panel" id="panel-hash">
+    <h2>hash generator (sha family)</h2>
+    <label>input text</label>
+    <textarea id="hashInput" placeholder="type or paste something...">the quick brown fox jumps over the lazy dog</textarea>
+    <div class="copybar" style="justify-content:flex-start; margin-top:10px;">
+      <button class="btn" onclick="calcHashes()">generate hashes</button>
+    </div>
+    <div class="output" id="hashOut">// sha-1 / sha-256 / sha-384 / sha-512 via SubtleCrypto</div>
+  </section>
+
+  <!-- ENCODER -->
+  <section class="panel" id="panel-encode">
+    <h2>encode / decode</h2>
+    <div class="row single">
+      <div>
+        <label>input</label>
+        <textarea id="encInput" placeholder="type something to transform...">hello world</textarea>
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
+      <button class="btn" onclick="encTransform('b64enc')">base64 encode</button>
+      <button class="btn ghost" onclick="encTransform('b64dec')">base64 decode</button>
+      <button class="btn ghost" onclick="encTransform('urlenc')">url encode</button>
+      <button class="btn ghost" onclick="encTransform('urldec')">url decode</button>
+      <button class="btn ghost" onclick="encTransform('hex')">to hex</button>
+      <button class="btn ghost" onclick="encTransform('rot13')">rot13</button>
+    </div>
+    <div class="output" id="encOut">// result appears here</div>
+  </section>
+
+  <!-- PORT LOOKUP -->
+  <section class="panel" id="panel-ports">
+    <h2>common port reference</h2>
+    <input type="text" id="portFilter" placeholder="filter: port number, name, or protocol..." oninput="renderPorts()" style="margin-bottom:12px;">
+    <div style="max-height:400px; overflow:auto;">
+      <table>
+        <thead><tr><th>port</th><th>proto</th><th>service</th><th>notes</th></tr></thead>
+        <tbody id="portTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PASSWORD ENTROPY -->
+  <section class="panel" id="panel-pw">
+    <h2>password entropy estimator</h2>
+    <label>test string (never leaves your browser)</label>
+    <input type="text" id="pwInput" placeholder="type a password to analyze..." oninput="calcEntropy()" autocomplete="off">
+    <div class="output" id="pwOut" style="margin-top:16px;">// waiting for input</div>
+  </section>
+
+  <footer>netkit — everything computed client-side. no network calls, no logging. stay sharp. 🛰️</footer>
+</div>
+
+<div class="toast" id="toast">copied to clipboard</div>
+
+<script>
+// ---------- clock ----------
+function tickClock(){
+  document.getElementById('clockval').textContent = new Date().toLocaleTimeString();
+}
+setInterval(tickClock, 1000); tickClock();
+
+// ---------- tabs ----------
+document.getElementById('tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+});
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg || 'copied to clipboard';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1400);
+}
+
+// ---------- SUBNET CALCULATOR ----------
+function ipToLong(ip){
+  const parts = ip.split('.').map(Number);
+  if(parts.length!==4 || parts.some(p=>isNaN(p)||p<0||p>255)) return null;
+  return ((parts[0]<<24)>>>0) + (parts[1]<<16) + (parts[2]<<8) + parts[3];
+}
+function longToIp(long){
+  return [(long>>>24)&255, (long>>>16)&255, (long>>>8)&255, long&255].join('.');
+}
+function calcSubnet(){
+  const raw = document.getElementById('subnetInput').value.trim();
+  const out = document.getElementById('subnetOut');
+  const m = raw.match(/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\/(\d{1,2})$/);
+  if(!m){ out.innerHTML = '<span class="err">invalid format. use x.x.x.x/prefix (e.g. 10.0.0.5/24)</span>'; return; }
+  const ipStr = m[1], prefix = parseInt(m[2],10);
+  if(prefix<0 || prefix>32){ out.innerHTML='<span class="err">prefix must be 0-32</span>'; return; }
+  const ipLong = ipToLong(ipStr);
+  if(ipLong===null){ out.innerHTML='<span class="err">invalid ip octets</span>'; return; }
+
+  const maskLong = prefix===0 ? 0 : (0xFFFFFFFF << (32-prefix)) >>> 0;
+  const networkLong = (ipLong & maskLong) >>> 0;
+  const broadcastLong = (networkLong | (~maskLong >>> 0)) >>> 0;
+  const totalHosts = Math.pow(2, 32-prefix);
+  const usableHosts = prefix>=31 ? (prefix===32?1:2) : totalHosts-2;
+  const firstHost = prefix>=31 ? networkLong : (networkLong+1)>>>0;
+  const lastHost = prefix>=31 ? broadcastLong : (broadcastLong-1)>>>0;
+
+  const wildcard = (~maskLong)>>>0;
+  const ipClass = (()=>{
+    const first = parseInt(ipStr.split('.')[0],10);
+    if(first<128) return 'A'; if(first<192) return 'B'; if(first<224) return 'C';
+    if(first<240) return 'D (multicast)'; return 'E (reserved)';
+  })();
+  const isPrivate = (()=>{
+    const [a,b] = ipStr.split('.').map(Number);
+    return (a===10) || (a===172 && b>=16 && b<=31) || (a===192 && b===168) || (a===127);
+  })();
+
+  out.innerHTML =
+`<div class="grid2">
+<span class="k">Input</span><span class="v accent">${raw}</span>
+<span class="k">Network Address</span><span class="v">${longToIp(networkLong)}</span>
+<span class="k">Broadcast Address</span><span class="v">${longToIp(broadcastLong)}</span>
+<span class="k">Subnet Mask</span><span class="v">${longToIp(maskLong)}</span>
+<span class="k">Wildcard Mask</span><span class="v">${longToIp(wildcard)}</span>
+<span class="k">CIDR Prefix</span><span class="v">/${prefix}</span>
+<span class="k">Total Addresses</span><span class="v">${totalHosts.toLocaleString()}</span>
+<span class="k">Usable Hosts</span><span class="v">${usableHosts.toLocaleString()}</span>
+<span class="k">First Usable Host</span><span class="v">${longToIp(firstHost)}</span>
+<span class="k">Last Usable Host</span><span class="v">${longToIp(lastHost)}</span>
+<span class="k">IP Class</span><span class="v">${ipClass}</span>
+<span class="k">Address Space</span><span class="v ${isPrivate?'warn':'accent'}">${isPrivate?'Private / RFC1918':'Public'}</span>
+</div>`;
+}
+document.getElementById('subnetInput').addEventListener('keydown', e=>{ if(e.key==='Enter') calcSubnet(); });
+calcSubnet();
+
+// ---------- HASH GENERATOR ----------
+async function sha(algo, text){
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest(algo, enc);
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function calcHashes(){
+  const text = document.getElementById('hashInput').value;
+  const out = document.getElementById('hashOut');
+  out.innerHTML = '<span class="k">computing...</span>';
+  const [sha1, sha256, sha384, sha512] = await Promise.all([
+    sha('SHA-1', text), sha('SHA-256', text), sha('SHA-384', text), sha('SHA-512', text)
+  ]);
+  out.innerHTML =
+`<span class="k">SHA-1</span>
+<span class="v accent">${sha1}</span>
+
+<span class="k">SHA-256</span>
+<span class="v accent">${sha256}</span>
+
+<span class="k">SHA-384</span>
+<span class="v accent">${sha384}</span>
+
+<span class="k">SHA-512</span>
+<span class="v accent">${sha512}</span>`;
+}
+calcHashes();
+
+// ---------- ENCODE / DECODE ----------
+function encTransform(mode){
+  const input = document.getElementById('encInput').value;
+  const out = document.getElementById('encOut');
+  try{
+    let result;
+    switch(mode){
+      case 'b64enc': result = btoa(unescape(encodeURIComponent(input))); break;
+      case 'b64dec': result = decodeURIComponent(escape(atob(input))); break;
+      case 'urlenc': result = encodeURIComponent(input); break;
+      case 'urldec': result = decodeURIComponent(input); break;
+      case 'hex': result = [...new TextEncoder().encode(input)].map(b=>b.toString(16).padStart(2,'0')).join(' '); break;
+      case 'rot13': result = input.replace(/[a-zA-Z]/g, c=>{
+        const base = c<='Z' ? 65 : 97;
+        return String.fromCharCode((c.charCodeAt(0)-base+13)%26+base);
+      }); break;
+    }
+    out.innerHTML = `<span class="v accent">${result.replace(/</g,'&lt;')}</span>`;
+  }catch(err){
+    out.innerHTML = `<span class="err">error: ${err.message}</span>`;
+  }
+}
+
+// ---------- PORT LOOKUP ----------
+const PORTS = [
+  [20,'TCP','FTP (data)','file transfer data channel'],
+  [21,'TCP','FTP (control)','file transfer control'],
+  [22,'TCP','SSH','secure shell / scp / sftp'],
+  [23,'TCP','Telnet','unencrypted remote login'],
+  [25,'TCP','SMTP','mail relay'],
+  [53,'BOTH','DNS','name resolution'],
+  [67,'UDP','DHCP (server)','address assignment'],
+  [68,'UDP','DHCP (client)','address assignment'],
+  [69,'UDP','TFTP','trivial file transfer'],
+  [80,'TCP','HTTP','unencrypted web'],
+  [110,'TCP','POP3','mail retrieval'],
+  [111,'BOTH','RPCbind','remote procedure call mapper'],
+  [123,'UDP','NTP','time sync'],
+  [135,'TCP','MSRPC','windows RPC endpoint mapper'],
+  [137,'UDP','NetBIOS-NS','name service'],
+  [138,'UDP','NetBIOS-DGM','datagram service'],
+  [139,'TCP','NetBIOS-SSN','session service / SMB legacy'],
+  [143,'TCP','IMAP','mail retrieval'],
+  [161,'UDP','SNMP','network monitoring'],
+  [162,'UDP','SNMP trap','monitoring alerts'],
+  [179,'TCP','BGP','border gateway protocol'],
+  [389,'TCP','LDAP','directory access'],
+  [443,'TCP','HTTPS','encrypted web (TLS)'],
+  [445,'TCP','SMB','windows file sharing'],
+  [465,'TCP','SMTPS','encrypted mail submission'],
+  [500,'UDP','IKE / IPsec','VPN key exchange'],
+  [514,'UDP','Syslog','log forwarding'],
+  [587,'TCP','SMTP (submission)','mail client submission'],
+  [636,'TCP','LDAPS','encrypted directory access'],
+  [989,'TCP','FTPS (data)','encrypted ftp data'],
+  [990,'TCP','FTPS (control)','encrypted ftp control'],
+  [993,'TCP','IMAPS','encrypted mail retrieval'],
+  [995,'TCP','POP3S','encrypted mail retrieval'],
+  [1433,'TCP','MSSQL','microsoft sql server'],
+  [1521,'TCP','Oracle DB','oracle listener'],
+  [1723,'TCP','PPTP','legacy VPN, weak crypto'],
+  [2049,'TCP','NFS','network file system'],
+  [3128,'TCP','Squid Proxy','common proxy default'],
+  [3306,'TCP','MySQL / MariaDB','database'],
+  [3389,'TCP','RDP','windows remote desktop'],
+  [4444,'TCP','Metasploit default','common payload handler port'],
+  [5432,'TCP','PostgreSQL','database'],
+  [5900,'TCP','VNC','remote framebuffer'],
+  [5985,'TCP','WinRM (HTTP)','windows remote management'],
+  [5986,'TCP','WinRM (HTTPS)','windows remote management, encrypted'],
+  [6379,'TCP','Redis','in-memory data store, often unauthenticated'],
+  [8080,'TCP','HTTP-alt','common proxy/app server port'],
+  [8443,'TCP','HTTPS-alt','common alt TLS port'],
+  [9200,'TCP','Elasticsearch','REST API, often exposed by accident'],
+  [27017,'TCP','MongoDB','database, historically exposed unauth'],
+];
+function renderPorts(){
+  const filter = document.getElementById('portFilter').value.toLowerCase();
+  const body = document.getElementById('portTableBody');
+  const rows = PORTS.filter(p => !filter || p.join(' ').toLowerCase().includes(filter));
+  body.innerHTML = rows.map(([port,proto,name,note])=>{
+    const cls = proto==='TCP'?'':proto==='UDP'?'udp':'both';
+    return `<tr><td>${port}</td><td><span class="badge ${cls}">${proto}</span></td><td>${name}</td><td style="color:var(--fg-dim)">${note}</td></tr>`;
+  }).join('') || `<tr><td colspan="4" style="color:var(--fg-dim)">no matches</td></tr>`;
+}
+renderPorts();
+
+// ---------- PASSWORD ENTROPY ----------
+function calcEntropy(){
+  const val = document.getElementById('pwInput').value;
+  const out = document.getElementById('pwOut');
+  if(!val){ out.innerHTML='// waiting for input'; return; }
+  let poolSize = 0;
+  if(/[a-z]/.test(val)) poolSize += 26;
+  if(/[A-Z]/.test(val)) poolSize += 26;
+  if(/[0-9]/.test(val)) poolSize += 10;
+  if(/[^a-zA-Z0-9]/.test(val)) poolSize += 33;
+  const entropy = poolSize>0 ? (val.length * Math.log2(poolSize)) : 0;
+
+  let label, cls, crackTime;
+  if(entropy < 28){ label='very weak'; cls='err'; }
+  else if(entropy < 36){ label='weak'; cls='err'; }
+  else if(entropy < 60){ label='reasonable'; cls='warn'; }
+  else if(entropy < 80){ label='strong'; cls='accent'; }
+  else { label='very strong'; cls='accent'; }
+
+  // rough offline fast-hash guess rate: 1e10 guesses/sec
+  const guesses = Math.pow(2, entropy);
+  const seconds = guesses / 1e10;
+  crackTime = humanTime(seconds);
+
+  out.innerHTML =
+`<div class="grid2">
+<span class="k">Length</span><span class="v">${val.length} chars</span>
+<span class="k">Character Pool</span><span class="v">${poolSize} symbols</span>
+<span class="k">Entropy</span><span class="v ${cls}">${entropy.toFixed(1)} bits</span>
+<span class="k">Rating</span><span class="v ${cls}">${label}</span>
+<span class="k">Est. crack time*</span><span class="v">${crackTime}</span>
+</div>
+<div style="margin-top:10px; color:var(--fg-dim); font-size:11px;">*rough estimate assuming ~1e10 guesses/sec offline fast-hash attack. real-world resistance depends heavily on the hashing algorithm used to store it (bcrypt/argon2 vs plain sha).</div>`;
+}
+function humanTime(seconds){
+  if(seconds < 1) return 'instant';
+  const units = [
+    ['centuries', 3153600000], ['years', 31536000], ['days', 86400],
+    ['hours', 3600], ['minutes', 60], ['seconds', 1]
+  ];
+  for(const [name, secs] of units){
+    if(seconds >= secs) return `~${(seconds/secs).toLocaleString(undefined,{maximumFractionDigits:1})} ${name}`;
+  }
+  return `${seconds.toFixed(1)} seconds`;
+}
+</script>
+</body>
+</html>

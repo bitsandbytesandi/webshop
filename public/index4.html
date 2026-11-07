@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070711">
+<meta name="description" content="Experience the next generation of web design.">
+<title>NEXTGEN — Beyond Ordinary</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --bg: #070711;
+  --purple: #9b5cff;
+  --blue: #43c6ff;
+  --pink: #ff4fd8;
+  --white: #f8f7ff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* BACKGROUND */
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 20% 20%, #31165c 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 70%, #102e55 0%, transparent 45%),
+    #070711;
+}
+
+.aurora {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: .35;
+  animation: float 12s ease-in-out infinite alternate;
+}
+
+.aurora.one {
+  background: #a344ff;
+  top: -250px;
+  left: -150px;
+}
+
+.aurora.two {
+  background: #087dff;
+  right: -250px;
+  bottom: -200px;
+  animation-delay: -5s;
+}
+
+.aurora.three {
+  background: #ff36b7;
+  top: 45%;
+  left: 35%;
+  width: 350px;
+  height: 350px;
+  animation-delay: -8s;
+}
+
+@keyframes float {
+  to {
+    transform: translate(100px, 100px) scale(1.3);
+  }
+}
+
+/* PARTICLES */
+
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* MOUSE GLOW */
+
+.mouse-glow {
+  position: fixed;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(155,92,255,.13),
+    transparent 70%
+  );
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+/* NAVIGATION */
+
+nav {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1100px, 92%);
+  padding: 16px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  z-index: 100;
+}
+
+.logo {
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.logo span {
+  color: var(--purple);
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  color: #bbb9cc;
+  text-decoration: none;
+  font-size: 13px;
+  transition: .3s;
+}
+
+.nav-links a:hover {
+  color: white;
+}
+
+.menu-btn {
+  display: none;
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+/* HERO */
+
+.hero {
+  min-height: 100vh;
+  padding: 150px 20px 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 950px;
+  animation: appear 1.2s ease both;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tag {
+  display: inline-block;
+  padding: 10px 18px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 50px;
+  background: rgba(255,255,255,.06);
+  color: #cbb6ff;
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+
+.hero h1 {
+  font-size: clamp(48px, 9vw, 105px);
+  font-weight: 900;
+  letter-spacing: -7px;
+  line-height: .98;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    90deg,
+    #a66cff,
+    #49c9ff,
+    #ff5ad9,
+    #a66cff
+  );
+  background-size: 300%;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: gradient 7s linear infinite;
+}
+
+@keyframes gradient {
+  to { background-position: 300% center; }
+}
+
+.hero p {
+  max-width: 620px;
+  margin: 30px auto;
+  color: #aaa8bf;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 35px;
+}
+
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  padding: 16px 27px;
+  border-radius: 13px;
+  font-weight: 700;
+  font-size: 14px;
+  transition: .35s;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(110deg, #8f51ff, #4b9dff);
+  color: white;
+  box-shadow: 0 0 30px rgba(135,80,255,.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 45px rgba(135,80,255,.65);
+}
+
+.btn-secondary {
+  color: white;
+  border: 1px solid #ffffff35;
+  background: #ffffff08;
+}
+
+.btn-secondary:hover {
+  background: #ffffff18;
+  transform: translateY(-5px);
+}
+
+/* SECTIONS */
+
+section.content {
+  padding: 100px 7%;
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(32px, 5vw, 55px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  margin-bottom: 15px;
+}
+
+.section-description {
+  color: #aaa8bf;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 60px;
+  line-height: 1.8;
+}
+
+/* GLASS CARDS */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  max-width: 1150px;
+  margin: auto;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: 35px;
+  min-height: 260px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 23px;
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(20px);
+  transition: transform .2s ease, border-color .3s;
+  transform-style: preserve-3d;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  top: -100px;
+  right: -100px;
+  background: var(--purple);
+  filter: blur(90px);
+  opacity: .25;
+}
+
+.card:hover {
+  border-color: #a66cff80;
+}
+
+.card-icon {
+  font-size: 36px;
+  margin-bottom: 25px;
+}
+
+.card h3 {
+  font-size: 21px;
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #aaa8bf;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* STATS */
+
+.stats {
+  max-width: 1000px;
+  margin: 70px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  gap: 30px;
+}
+
+.stat h2 {
+  font-size: 45px;
+  background: linear-gradient(90deg, #aa75ff, #46c8ff);
+  color: transparent;
+  background-clip: text;
+}
+
+.stat p {
+  color: #aaa8bf;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+/* SHOWCASE */
+
+.showcase {
+  max-width: 1050px;
+  margin: 60px auto;
+  padding: 60px 30px;
+  border-radius: 30px;
+  border: 1px solid #ffffff20;
+  background:
+    radial-gradient(circle at top right, #7335bb40, transparent 50%),
+    rgba(255,255,255,.04);
+  text-align: center;
+}
+
+.showcase h2 {
+  font-size: clamp(30px, 5vw, 55px);
+  margin-bottom: 20px;
+}
+
+.showcase p {
+  color: #aaa8bf;
+  line-height: 1.8;
+}
+
+/* SCROLL REVEAL */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(45px);
+  transition: opacity .8s ease, transform .8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* FOOTER */
+
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid #ffffff12;
+  color: #77758d;
+  font-size: 13px;
+}
+
+/* MOBILE */
+
+@media(max-width: 750px) {
+  nav {
+    padding: 15px 20px;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 65px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    padding: 25px;
+    background: rgba(12,10,28,.95);
+    border: 1px solid #ffffff20;
+    border-radius: 15px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .hero h1 {
+    letter-spacing: -3px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .mouse-glow {
+    display: none;
+  }
+}
+
+@media(prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="background">
+  <div class="aurora one"></div>
+  <div class="aurora two"></div>
+  <div class="aurora three"></div>
+</div>
+
+<canvas id="particles"></canvas>
+<div class="mouse-glow" id="mouseGlow"></div>
+
+<nav>
+  <div class="logo">NEXT<span>GEN.</span></div>
+
+  <div class="nav-links" id="navLinks">
+    <a href="#home">Home</a>
+    <a href="#features">Features</a>
+    <a href="#experience">Experience</a>
+  </div>
+
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+</nav>
+
+<header class="hero" id="home">
+  <div class="hero-content">
+
+    <div class="tag">✦ THE FUTURE STARTS HERE</div>
+
+    <h1>
+      BEYOND<br>
+      <span class="gradient-text">ORDINARY.</span>
+    </h1>
+
+    <p>
+      Ontdek een nieuwe dimensie van digitaal design.
+      Vloeiende animaties, futuristische effecten en
+      een onvergetelijke gebruikerservaring.
+    </p>
+
+    <div class="buttons">
+      <a href="#features" class="btn btn-primary">
+        Explore experience ↗
+      </a>
+
+      <a href="#experience" class="btn btn-secondary">
+        Discover more
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<section class="content" id="features">
+
+  <h2 class="section-title reveal">
+    The next level of <span class="gradient-text">design.</span>
+  </h2>
+
+  <p class="section-description reveal">
+    Technologie en creativiteit gecombineerd
+    in één indrukwekkende digitale ervaring.
+  </p>
+
+  <div class="cards">
+
+    <article class="card reveal">
+      <div class="card-icon">🌌</div>
+      <h3>Immersive Design</h3>
+      <p>
+        Dynamische achtergronden, aurora-effecten
+        en een moderne visuele identiteit.
+      </p>
+    </article>
+
+    <article class="card reveal">
+      <div class="card-icon">⚡</div>
+      <h3>Ultra Smooth</h3>
+      <p>
+        Vloeiende interacties, subtiele transities
+        en responsieve animaties.
+      </p>
+    </article>
+
+    <article class="card reveal">
+      <div class="card-icon">💎</div>
+      <h3>Glass Experience</h3>
+      <p>
+        Diepte, transparantie, blur en
+        geavanceerde glassmorphism.
+      </p>
+    </article>
+
+  </div>
+
+  <div class="stats reveal">
+
+    <div class="stat">
+      <h2 data-count="100">0</h2>
+      <p>Creativity</p>
+    </div>
+
+    <div class="stat">
+      <h2 data-count="99">0</h2>
+      <p>Experience</p>
+    </div>
+
+    <div class="stat">
+      <h2 data-count="24">0</h2>
+      <p>Innovation</p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="content" id="experience">
+
+  <div class="showcase reveal">
+    <div class="tag">✦ FUTURE IS NOW</div>
+
+    <h2>
+      Create something<br>
+      <span class="gradient-text">extraordinary.</span>
+    </h2>
+
+    <p>
+      Geen grenzen. Geen standaardervaring.
+      Alleen pure creativiteit en technologie.
+    </p>
+
+    <div class="buttons">
+      <a href="#home" class="btn btn-primary">
+        Back to top ↑
+      </a>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  © <span id="year"></span> NEXTGEN EXPERIENCE.
+  Designed for the future. ✦
+</footer>
+
+<script>
+/* MOBILE MENU */
+
+const menuBtn = document.getElementById("menuBtn");
+const navLinks = document.getElementById("navLinks");
+
+menuBtn.addEventListener("click", () => {
+  navLinks.classList.toggle("active");
+  menuBtn.textContent =
+    navLinks.classList.contains("active") ? "✕" : "☰";
+});
+
+navLinks.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("active");
+    menuBtn.textContent = "☰";
+  });
+});
+
+/* MOUSE GLOW */
+
+const glow = document.getElementById("mouseGlow");
+
+window.addEventListener("pointermove", e => {
+  glow.style.left = e.clientX + "px";
+  glow.style.top = e.clientY + "px";
+});
+
+/* SCROLL REVEAL */
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll(".reveal").forEach(el => {
+  observer.observe(el);
+});
+
+/* 3D CARD EFFECT */
+
+if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  document.querySelectorAll(".card").forEach(card => {
+
+    card.addEventListener("pointermove", e => {
+      const rect = card.getBoundingClientRect();
+
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+
+      card.style.transform =
+        `perspective(900px)
+         rotateX(${(0.5-y)*9}deg)
+         rotateY(${(x-0.5)*9}deg)
+         translateY(-5px)`;
+    });
+
+    card.addEventListener("pointerleave", () => {
+      card.style.transform = "";
+    });
+
+  });
+}
+
+/* ANIMATED COUNTERS */
+
+const counters = document.querySelectorAll("[data-count]");
+
+const counterObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+
+    const el = entry.target;
+    const target = Number(el.dataset.count);
+    const start = performance.now();
+    const duration = 1500;
+
+    function update(now) {
+      const progress = Math.min((now-start)/duration, 1);
+      const eased = 1-Math.pow(1-progress, 3);
+
+      el.textContent = Math.round(target*eased) + "%";
+
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+    counterObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+
+counters.forEach(el => counterObserver.observe(el));
+
+/* PARTICLE SYSTEM */
+
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+let width, height;
+const reducedMotion =
+  matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function resize() {
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+
+  width = innerWidth;
+  height = innerHeight;
+
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+
+  canvas.style.width = width + "px";
+  canvas.style.height = height + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  particles = Array.from({
+    length: Math.min(75, Math.floor(width/15))
+  }, () => ({
+    x: Math.random()*width,
+    y: Math.random()*height,
+    size: Math.random()*2+0.5,
+    speed: Math.random()*0.35+0.1,
+    alpha: Math.random()*0.6+0.2
+  }));
+}
+
+function animate() {
+  ctx.clearRect(0, 0, width, height);
+
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(180,150,255,${p.alpha})`;
+    ctx.fill();
+
+    if (!reducedMotion) {
+      p.y -= p.speed;
+
+      if (p.y < -5) {
+        p.y = height+5;
+        p.x = Math.random()*width;
+      }
+    }
+  });
+
+  if (!reducedMotion) requestAnimationFrame(animate);
+}
+
+resize();
+animate();
+
+addEventListener("resize", resize);
+
+/* FOOTER YEAR */
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+</script>
+
+</body>
+</html>

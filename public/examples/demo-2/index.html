@@ -1,134 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Living Shapes – Zen Landing</title>
-  <style>
-    body {
-      height: 100vh;
-      width: 100vw;
-      display: grid;
-      place-items: center;
-      background-color: black;
-      margin: 0;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WK Webdesign 2026 - De Ultieme Ervaring</title>
+    <!-- Tailwind CSS voor snelle, moderne styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- GSAP voor next-level scroll- en muisanimaties -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Google Fonts: Kinetische uitstraling -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
 
-    #wrapper {
-      aspect-ratio: 1.618;
-      width: 90vmin;
-      position: relative;
-    }
+        /* Glasmorfisme 2.0 Paneel */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
 
-    #wrapper > .shape {
-      height: 30%;
-      width: 30%;
-      background-color: rgba(255, 255, 255, 0.05);
-      position: absolute;
-      transition: left, top, height, width, border-radius;
-      transition-duration: 750ms;
-      transition-timing-function: ease-in-out;
-    }
+        /* Gekleurde Glow Achtergronden */
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.5;
+            transition: transform 0.5s ease;
+        }
 
-    #wrapper > .shape:nth-child(1) { background-color: rgb(0, 250, 50); z-index: 2; }
-    #wrapper > .shape:nth-child(2) { background-color: rgb(100, 50, 200); z-index: 2; }
-    #wrapper > .shape:nth-child(3) { background-color: rgb(200, 0, 50);  z-index: 1; }
-    #wrapper > .shape:nth-child(4) { background-color: rgb(250, 10, 100);  z-index: 2; }
-    #wrapper > .shape:nth-child(5) { background-color: rgb(50, 200, 110);  z-index: 2; }
-    #wrapper > .shape:nth-child(6) { background-color: rgb(20, 20, 40);   z-index: 2; }
-    #wrapper > .shape:nth-child(7) { background-color: rgb(100, 200, 40);   z-index: 2; }
-
-    /* Configuration 1 */
-    #wrapper[data-configuration="1"] > .shape:nth-child(1) { left: 0%;  top: 0%;  height: 50%; width: 20%; }
-    #wrapper[data-configuration="1"] > .shape:nth-child(2) { left: 20%; top: 0%;  height: 50%; width: 30%; }
-    #wrapper[data-configuration="1"] > .shape:nth-child(3) { left: 50%; top: 0%;  height: 100%; width: 50%; }
-    #wrapper[data-configuration="1"] > .shape:nth-child(4) { left: 0%;  top: 50%; height: 50%; width: 30%; }
-    #wrapper[data-configuration="1"] > .shape:nth-child(5) { left: 30%; top: 50%; height: 50%; width: 20%; }
-    #wrapper[data-configuration="1"] > .shape:nth-child(6) { left: 70%; top: 50%; height: 50%; width: 30%; }
-    #wrapper[data-configuration="1"] > .shape:nth-child(7) { left: 85%; top: 75%; height: 25%; width: 15%; }
-
-    /* Configuration 2 */
-    #wrapper[data-configuration="2"] > .shape:nth-child(1) { left: 25%; top: 20%; height: 80%; width: 15%; }
-    #wrapper[data-configuration="2"] > .shape:nth-child(2) { left: 40%; top: 20%; height: 50%; width: 10%; }
-    #wrapper[data-configuration="2"] > .shape:nth-child(3) { left: 50%; top: 0%;  height: 100%; width: 25%; }
-    #wrapper[data-configuration="2"] > .shape:nth-child(4) { left: 0%;  top: 0%;  height: 50%; width: 10%; }
-    #wrapper[data-configuration="2"] > .shape:nth-child(5) { left: 10%; top: 0%;  height: 70%; width: 15%; }
-    #wrapper[data-configuration="2"] > .shape:nth-child(6) { left: 75%; top: 10%; height: 80%; width: 15%; }
-    #wrapper[data-configuration="2"] > .shape:nth-child(7) { left: 90%; top: 40%; height: 60%; width: 10%; }
-
-    /* Configuration 3 */
-    #wrapper[data-configuration="3"] > .shape:nth-child(1) { left: 0%;  top: 16.5%; height: 32%; width: 20%; }
-    #wrapper[data-configuration="3"] > .shape:nth-child(2) { left: 20%; top: 2.7%;  height: 55%; width: 34%; }
-    #wrapper[data-configuration="3"] > .shape:nth-child(3) { left: 38%; top: 0%;    height: 100%; width: 62%; }
-    #wrapper[data-configuration="3"] > .shape:nth-child(4) { left: 0%;  top: 47.3%; height: 55%; width: 34%; }
-    #wrapper[data-configuration="3"] > .shape:nth-child(5) { left: 34%; top: 56.4%; height: 32%; width: 20%; }
-    #wrapper[data-configuration="3"] > .shape:nth-child(6) { left: 66%; top: 45%;   height: 55%; width: 34%; }
-    #wrapper[data-configuration="3"] > .shape:nth-child(7) { left: 80%; top: 68%;   height: 32%; width: 20%; }
-
-    /* Roundness variants */
-    #wrapper[data-roundness="1"] > .shape { border-radius: 6rem; }
-    #wrapper[data-roundness="2"] > .shape { border-radius: 0; }
-    #wrapper[data-roundness="3"] > .shape { border-radius: 30rem; }
-
-    #wrapper[data-roundness="4"] > .shape:nth-child(1) { border-bottom-left-radius: 10rem; }
-    #wrapper[data-roundness="4"] > .shape:nth-child(2) { border-radius: 20rem; }
-    #wrapper[data-roundness="4"] > .shape:nth-child(3) { border-top-right-radius: 12rem; }
-    #wrapper[data-roundness="4"] > .shape:nth-child(4) {
-      border-top-right-radius: 10rem;
-      border-bottom-right-radius: 10rem;
-    }
-    #wrapper[data-roundness="4"] > .shape:nth-child(5) { border-bottom-left-radius: 10rem; }
-    #wrapper[data-roundness="4"] > .shape:nth-child(6) { border-top-left-radius: 16rem; }
-    #wrapper[data-roundness="4"] > .shape:nth-child(7) { border-top-left-radius: 10rem; }
-  </style>
+        /* Kinetische Tekst Stroke */
+        .text-outline {
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.2);
+            color: transparent;
+            transition: all 0.4s ease;
+        }
+        .text-outline:hover {
+            -webkit-text-stroke: 2px #ec4899;
+            color: #ec4899;
+            text-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
+        }
+    </style>
 </head>
-<body>
-  <div id="wrapper" data-configuration="1" data-roundness="1">
-    <div class="shape"></div>
-    <div class="shape"></div>
-    <div class="shape"></div>
-    <div class="shape"></div>
-    <div class="shape"></div>
-    <div class="shape"></div>
-    <div class="shape"></div>
-  </div>
+<body class="relative selection:bg-pink-500 selection:text-white">
 
-  <script>
-    const wrapper = document.getElementById("wrapper");
+    <!-- Dynamische Achtergrond Glows -->
+    <div class="glow-sphere w-[500px] h-[500px] bg-pink-600 top-[-10%] left-[-10%]"></div>
+    <div class="glow-sphere w-[600px] h-[600px] bg-purple-600 bottom-[10%] right-[-10%]"></div>
+    <div class="glow-sphere w-[400px] h-[400px] bg-blue-600 top-[50%] left-[30%]"></div>
 
-    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+    <!-- HEADER / NAVIGATIE -->
+    <header class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center glass-panel border-x-0 border-t-0">
+        <div class="text-xl font-black tracking-wider bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+            WK // 2026 FINALE
+        </div>
+        <nav class="hidden md:flex gap-8 text-sm font-semibold tracking-widest uppercase text-gray-300">
+            <a href="#hero" class="hover:text-pink-500 transition-colors">Start</a>
+            <a href="#effecten" class="hover:text-pink-500 transition-colors">De Kracht</a>
+            <a href="#interactie" class="hover:text-pink-500 transition-colors">Beleving</a>
+        </nav>
+        <button class="relative px-6 py-2.5 rounded-full font-bold text-sm bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg shadow-pink-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer">
+            Stem Nu ❤️
+        </button>
+    </header>
 
-    const uniqueRand = (min, max, prev) => {
-      let next = prev;
-      while (prev === next) next = rand(min, max);
-      return next;
-    };
+    <!-- HERO SECTIE: Kinetische Typografie & Scroll-driven -->
+    <section id="hero" class="relative min-h-screen flex flex-col justify-center items-center text-center px-4 pt-20">
+        <div class="max-w-5xl mx-auto space-y-6">
+            <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase bg-pink-500/10 text-pink-400 border border-pink-500/20">
+                Wereldkampioenschap Webdesign - Kampioenschapseditie
+            </span>
+            <h1 class="text-6xl md:text-9xl font-black tracking-tight uppercase leading-none">
+                <span class="block text-white drop-shadow-2xl">Puur</span>
+                <span class="block text-outline">Geweld</span>
+            </h1>
+            <p class="max-w-xl mx-auto text-gray-400 text-lg md:text-xl font-light">
+                Een fusie van glas, extreme micro-interacties en vloeiende scroll-driven animaties die de jury omver blazen.
+            </p>
+        </div>
+        
+        <!-- Scroll-indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-60">
+            <span class="text-xs tracking-widest uppercase text-gray-400">Scroll naar glorie</span>
+            <div class="w-5 h-9 rounded-full border-2 border-gray-500 flex justify-center p-1">
+                <div class="w-1 h-2 bg-pink-500 rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </section>
 
-    // Only the combinations that look intentional
-    const combinations = [
-      { configuration: 1, roundness: 1 },
-      { configuration: 1, roundness: 2 },
-      { configuration: 1, roundness: 4 },
-      { configuration: 2, roundness: 2 },
-      { configuration: 2, roundness: 3 },
-      { configuration: 3, roundness: 3 }
-    ];
+    <!-- EFFECTEN SECTIE: Glasmorfisme 2.0 & Grid -->
+    <section id="effecten" class="relative py-32 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-20 space-y-4">
+            <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tight">Het Arsenaal</h2>
+            <p class="text-gray-400 max-w-xl mx-auto">De ultieme tools ingezet om de wereldtitel binnen te slepen.</p>
+        </div>
 
-    let prev = 0;
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Card 1 -->
+            <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group hover:border-pink-500/50 transition-all duration-500">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl group-hover:bg-pink-500/30 transition-all"></div>
+                <div class="text-pink-500 text-3xl font-black mb-6">01</div>
+                <h3 class="text-2xl font-bold mb-3">Scroll-Driven Physics</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Elementen reageren op elkste milliseconde van je scrollgedrag, waardoor de pagina tot leven komt als een fysiek object.</p>
+            </div>
 
-    setInterval(() => {
-      // Optional: pause while hovering (as noted in the video comments)
-      // if (wrapper.matches(":hover")) return;
+            <!-- Card 2 -->
+            <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group hover:border-purple-500/50 transition-all duration-500">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/30 transition-all"></div>
+                <div class="text-purple-500 text-3xl font-black mb-6">02</div>
+                <h3 class="text-2xl font-bold mb-3">Kinetische Typografie</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Letters die vervormen, reageren op de cursor en de kijker meetrekken in een visuele achtbaan van emotie.</p>
+            </div>
 
-      const index = uniqueRand(0, combinations.length - 1, prev);
-      const combination = combinations[index];
+            <!-- Card 3 -->
+            <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group hover:border-blue-500/50 transition-all duration-500">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/30 transition-all"></div>
+                <div class="text-blue-500 text-3xl font-black mb-6">03</div>
+                <h3 class="text-2xl font-bold mb-3">Glasmorfisme 2.0</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Diepe lagen met geavanceerde achtergrondblurs en dynamische randlichten voor een ongeëvenaarde luxe uitstraling.</p>
+            </div>
+        </div>
+    </section>
 
-      wrapper.dataset.configuration = combination.configuration;
-      wrapper.dataset.roundness = combination.roundness;
+    <!-- INTERACTIE SECTIE: Call to Action met maximale flair -->
+    <section id="interactie" class="py-32 px-6">
+        <div class="max-w-4xl mx-auto glass-panel p-12 md:p-20 rounded-[40px] text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-pink-600/10 via-purple-600/10 to-blue-600/10"></div>
+            <div class="relative z-10 space-y-6">
+                <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tight">Klaar voor de Trofee?</h2>
+                <p class="text-gray-300 max-w-lg mx-auto">Dit script bewijst dat techniek en esthetiek samensmelten tot absolute perfectie.</p>
+                <div class="pt-4 flex flex-col sm:flex-row justify-center gap-4">
+                    <button id="confetti-btn" class="px-8 py-4 rounded-full font-bold bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 active:scale-95 transition-all shadow-xl cursor-pointer">
+                        Activeer Kampioensmodus 🏆
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      prev = index;
-    }, 3000);
-  </script>
+    <!-- FOOTER -->
+    <footer class="py-12 px-6 text-center text-xs text-gray-500 border-t border-white/5">
+        <p>Gemaakt met liefde en pure code voor het WK Webdesign ❤️</p>
+    </footer>
+
+    <!-- JAVASCRIPT: Animaties & Interactiviteit -->
+    <script>
+        // GSAP ScrollTrigger initiatie voor soepele sectie-animaties
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from("#hero h1 span", {
+            y: 100,
+            opacity: 0,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power4.out"
+        });
+
+        // Simpele interactieve feedback op de knop
+        const btn = document.getElementById('confetti-btn');
+        btn.addEventListener('click', () => {
+            btn.innerText = "🏆 GEFELICITEERD, WERELDKAMPIOEN! 🏆";
+            btn.classList.remove('bg-white', 'text-gray-900');
+            btn.classList.add('bg-gradient-to-r', 'from-pink-500', 'via-purple-500', 'to-blue-500', 'text-white', 'scale-105');
+            
+            // Subtiele schudanimatie
+            gsap.to(btn, {x: [-10, 10, -10, 10, 0], duration: 0.4});
+        });
+
+        // Muisvolg effect voor de achtergrondglows
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            gsap.to('.glow-sphere', {
+                x: (i, target) => (x - 0.5) * (i + 1) * 50,
+                y: (i, target) => (y - 0.5) * (i + 1) * 50,
+                duration: 1,
+                ease: "power2.out"
+            });
+        });
+    </script>
 </body>
 </html>

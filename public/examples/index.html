@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA — Premium Webshop</title>
+<meta name="description" content="NOVA is een moderne premium webshop met snelle, functionele visuele effecten.">
+
+<style>
+/* =========================================================
+   DESIGN TOKENS
+   Dopamine accenten + Nature Distilled basis
+========================================================= */
+:root{
+  --ink:#0d0f12;
+  --paper:#f4f1ea;
+  --sand:#d9cfbe;
+  --moss:#3c4a3a;
+  --pink:#ff2e88;
+  --blue:#2a6bff;
+  --lime:#c8ff3d;
+
+  --radius:22px;
+  --glass:rgba(255,255,255,.14);
+  --glass-border:rgba(255,255,255,.28);
+  --shadow:0 18px 60px rgba(10,12,16,.22);
+
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --fast:.22s;
+  --slow:.75s;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  overflow-x:hidden;
+}
+
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0}
+
+.container{
+  width:min(1180px,calc(100% - 40px));
+  margin-inline:auto;
+}
+
+/* =========================================================
+   HEADER — GLASSMORPHISM 2.0
+========================================================= */
+.header{
+  position:fixed;
+  inset:16px 16px auto;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:14px 20px;
+  border-radius:999px;
+  background:rgba(13,15,18,.55);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:var(--shadow);
+  color:#fff;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  letter-spacing:-.04em;
+  font-size:1.15rem;
+}
+
+.brand-dot{
+  width:12px;height:12px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--blue));
+  box-shadow:0 0 18px rgba(255,46,136,.55);
+}
+
+.nav{display:flex;gap:22px;font-size:.92rem;opacity:.86}
+.nav a{position:relative;transition:opacity var(--fast) var(--ease)}
+.nav a:hover{opacity:1}
+
+.nav a::after{
+  content:"";
+  position:absolute;
+  left:0;bottom:-6px;
+  width:100%;height:1.5px;
+  background:var(--lime);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform var(--fast) var(--ease);
+}
+
+.nav a:hover::after{transform:scaleX(1)}
+
+.header-actions{display:flex;align-items:center;gap:10px}
+
+.icon-btn{
+  width:42px;height:42px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff;
+  transition:transform var(--fast) var(--ease),background var(--fast) var(--ease);
+}
+
+.icon-btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.2)}
+.icon-btn:active{transform:scale(.94)}
+
+/* =========================================================
+   HERO — KINETISCHE TYPOGRAFIE
+========================================================= */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:grid;
+  align-items:center;
+  padding:150px 0 90px;
+  color:#fff;
+  overflow:hidden;
+  isolation:isolate;
+}
+
+.hero-bg{
+  position:absolute;
+  inset:-20%;
+  z-index:-2;
+  background:
+    radial-gradient(45% 45% at 20% 25%,rgba(255,46,136,.55),transparent 60%),
+    radial-gradient(40% 40% at 78% 30%,rgba(42,107,255,.55),transparent 60%),
+    radial-gradient(45% 45% at 55% 82%,rgba(200,255,61,.32),transparent 60%),
+    linear-gradient(160deg,#0d0f12,#171c22 60%,#0d0f12);
+  filter:saturate(125%);
+  animation:bgFloat 18s ease-in-out infinite alternate;
+}
+
+@keyframes bgFloat{
+  from{transform:translate3d(-2%,-1%,0) scale(1.05)}
+  to{transform:translate3d(2%,2%,0) scale(1.12)}
+}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:50px;
+  align-items:center;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);
+  font-size:.78rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.hero h1{
+  margin:22px 0 18px;
+  font-size:clamp(3rem,7.5vw,6.5rem);
+  line-height:.92;
+  letter-spacing:-.06em;
+  font-weight:850;
+}
+
+.kinetic{
+  display:inline-block;
+  background:linear-gradient(90deg,var(--pink),var(--blue),var(--lime));
+  background-size:220% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:kineticShift 7s linear infinite;
+}
+
+@keyframes kineticShift{
+  to{background-position:220% 0}
+}
+
+.hero p{
+  max-width:480px;
+  font-size:1.08rem;
+  line-height:1.6;
+  opacity:.82;
+}
+
+.hero-cta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-top:34px;
+}
+
+.btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:16px 28px;
+  border-radius:999px;
+  font-weight:700;
+  overflow:hidden;
+  transition:transform var(--fast) var(--ease),box-shadow var(--fast) var(--ease);
+}
+
+.btn-primary{
+  background:#fff;
+  color:var(--ink);
+  box-shadow:0 12px 35px rgba(255,255,255,.18);
+}
+
+.btn-primary:hover{transform:translateY(-3px) scale(1.02)}
+.btn-primary:active{transform:scale(.97)}
+
+.btn-ghost{
+  color:#fff;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.25);
+}
+
+.btn-ghost:hover{background:rgba(255,255,255,.18)}
+
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(255,255,255,.35),transparent 45%);
+  opacity:0;
+  transition:opacity var(--fast) var(--ease);
+}
+
+.btn:hover::before{opacity:1}
+
+.hero-card{
+  padding:26px;
+  border-radius:var(--radius);
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:var(--shadow);
+  transform:perspective(1100px) rotateY(-7deg) rotateX(5deg);
+  transition:transform var(--slow) var(--ease);
+}
+
+.hero-card:hover{
+  transform:perspective(1100px) rotateY(0deg) rotateX(0deg) translateY(-8px);
+}
+
+.product-preview{
+  border-radius:16px;
+  overflow:hidden;
+  aspect-ratio:4/5;
+  background:linear-gradient(135deg,#1b2027,#2b3138);
+  display:grid;
+  place-items:center;
+}
+
+.product-preview img{
+  width:100%;height:100%;
+  object-fit:cover;
+  opacity:.92;
+  transition:transform var(--slow) var(--ease);
+}
+
+.hero-card:hover .product-preview img{transform:scale(1.06)}
+
+.product-info{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:18px;
+  color:#fff;
+}
+
+.price{font-weight:800;color:var(--lime)}
+
+/* =========================================================
+   SCROLL PROGRESS
+========================================================= */
+.progress{
+  position:fixed;
+  top:0;left:0;
+  height:3px;
+  width:100%;
+  transform-origin:left;
+  background:linear-gradient(90deg,var(--pink),var(--blue),var(--lime));
+  transform:scaleX(0);
+  z-index:200;
+}
+
+/* CSS scroll-driven progress */
+@supports (animation-timeline: scroll()){
+  .progress{
+    animation:grow linear both;
+    animation-timeline:scroll();
+  }
+  @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+}
+
+/* =========================================================
+   MARQUEE
+========================================================= */
+.marquee{
+  padding:22px 0;
+  border-block:1px solid rgba(13,15,18,.12);
+  background:#fff;
+  overflow:hidden;
+}
+
+.marquee-track{
+  display:flex;
+  gap:44px;
+  width:max-content;
+  animation:marquee 22s linear infinite;
+}
+
+.marquee span{
+  font-size:1.05rem;
+  font-weight:700;
+  letter-spacing:-.02em;
+  white-space:nowrap;
+  opacity:.65;
+}
+
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* =========================================================
+   PRODUCTEN — BENTO / GLASS CARDS
+========================================================= */
+.section{
+  padding:110px 0;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:24px;
+  margin-bottom:40px;
+}
+
+.section-head h2{
+  margin:0;
+  font-size:clamp(2rem,4.5vw,3.4rem);
+  letter-spacing:-.05em;
+  line-height:1;
+}
+
+.section-head p{margin:10px 0 0;max-width:430px;opacity:.7}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+
+.card{
+  position:relative;
+  padding:18px;
+  border-radius:var(--radius);
+  background:#fff;
+  border:1px solid rgba(13,15,18,.08);
+  box-shadow:0 10px 30px rgba(13,15,18,.06);
+  overflow:hidden;
+  transition:transform var(--fast) var(--ease),box-shadow var(--fast) var(--ease);
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 22px 50px rgba(13,15,18,.14);
+}
+
+.card-media{
+  aspect-ratio:1/1;
+  border-radius:16px;
+  overflow:hidden;
+  background:linear-gradient(135deg,var(--sand),#e8e2d5);
+}
+
+.card-media img{
+  width:100%;height:100%;
+  object-fit:cover;
+  transition:transform var(--slow) var(--ease);
+}
+
+.card:hover .card-media img{transform:scale(1.07)}
+
+.card-tag{
+  position:absolute;
+  top:30px;left:30px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:.72rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  background:var(--ink);
+  color:#fff;
+}
+
+.card h3{
+  margin:16px 0 6px;
+  font-size:1.08rem;
+  letter-spacing:-.02em;
+}
+
+.card-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:.92rem;
+}
+
+.add{
+  padding:10px 16px;
+  border-radius:999px;
+  background:var(--ink);
+  color:#fff;
+  font-weight:700;
+  transition:transform var(--fast) var(--ease),background var(--fast) var(--ease);
+}
+
+.add:hover{background:var(--pink)}
+.add:active{transform:scale(.93)}
+
+.card.wide{grid-column:span 2}
+.card.tall{grid-row:span 2}
+
+/* =========================================================
+   USP / STORY — PARALLAX LAGEN
+========================================================= */
+.story{
+  position:relative;
+  padding:130px 0;
+  color:#fff;
+  background:var(--moss);
+  overflow:hidden;
+}
+
+.story::before{
+  content:"";
+  position:absolute;
+  inset:-10%;
+  background:
+    radial-gradient(35% 35% at 20% 30%,rgba(200,255,61,.22),transparent 60%),
+    radial-gradient(35% 35% at 80% 70%,rgba(255,46,136,.25),transparent 60%);
+}
+
+.story-inner{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  align-items:center;
+}
+
+.story h2{
+  font-size:clamp(2.4rem,5.5vw,4.4rem);
+  line-height:.98;
+  letter-spacing:-.05em;
+  margin:0 0 20px;
+}
+
+.story p{opacity:.85;line-height:1.65;max-width:520px}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+
+.stat{
+  padding:24px;
+  border-radius:var(--radius);
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+.stat strong{
+  display:block;
+  font-size:2.3rem;
+  letter-spacing:-.05em;
+}
+
+/* =========================================================
+   NEWSLETTER
+========================================================= */
+.newsletter{
+  padding:110px 0;
+  background:#fff;
+}
+
+.newsletter-box{
+  padding:clamp(30px,6vw,70px);
+  border-radius:32px;
+  color:#fff;
+  background:
+    radial-gradient(40% 60% at 15% 20%,rgba(255,46,136,.75),transparent),
+    radial-gradient(45% 60% at 85% 80%,rgba(42,107,255,.75),transparent),
+    var(--ink);
+  box-shadow:var(--shadow);
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:40px;
+  align-items:center;
+}
+
+.newsletter h2{
+  margin:0 0 14px;
+  font-size:clamp(2rem,4.5vw,3.3rem);
+  letter-spacing:-.05em;
+}
+
+.form{
+  display:flex;
+  gap:10px;
+  padding:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.25);
+}
+
+.form input{
+  flex:1;
+  min-width:0;
+  padding:14px 20px;
+  border:0;
+  outline:0;
+  border-radius:999px;
+  background:transparent;
+  color:#fff;
+}
+
+.form input::placeholder{color:rgba(255,255,255,.65)}
+
+.form button{
+  padding:14px 24px;
+  border-radius:999px;
+  background:#fff;
+  color:var(--ink);
+  font-weight:800;
+  transition:transform var(--fast) var(--ease);
+}
+
+.form button:hover{transform:scale(1.04)}
+.form button:active{transform:scale(.95)}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.footer{
+  padding:70px 0 40px;
+  background:var(--ink);
+  color:rgba(255,255,255,.72);
+}
+
+.footer-grid{
+  display:grid;
+  grid-template-columns:1.4fr repeat(3,1fr);
+  gap:40px;
+}
+
+.footer h4{
+  color:#fff;
+  margin:0 0 14px;
+  font-size:.95rem;
+}
+
+.footer a{display:block;margin-bottom:10px;transition:color var(--fast) var(--ease)}
+.footer a:hover{color:var(--lime)}
+
+.footer-bottom{
+  margin-top:50px;
+  padding-top:22px;
+  border-top:1px solid rgba(255,255,255,.14);
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  font-size:.85rem;
+}
+
+/* =========================================================
+   SCROLL REVEAL — JS fallback
+========================================================= */
+.reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .8s var(--ease),transform .8s var(--ease);
+}
+
+.reveal.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* CSS-native scroll reveal waar ondersteund */
+@supports (animation-timeline: view()){
+  .reveal{
+    animation:revealIn both;
+    animation-timeline:view();
+    animation-range:entry 5% cover 35%;
+  }
+  @keyframes revealIn{
+    from{opacity:0;transform:translateY(38px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width:980px){
+  .hero-grid,.story-inner,.newsletter-box{grid-template-columns:1fr}
+  .products{grid-template-columns:repeat(2,1fr)}
+  .card.wide,.card.tall{grid-column:auto;grid-row:auto}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .nav{display:none}
+}
+
+@media (max-width:560px){
+  .header{inset:10px 10px auto;padding:10px 14px}
+  .products{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .form{flex-direction:column;border-radius:24px}
+  .form button{width:100%}
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+
+<body>
+
+<div class="progress" aria-hidden="true"></div>
+
+<header class="header">
+  <a class="brand" href="#">
+    <span class="brand-dot"></span>
+    NOVA
+  </a>
+
+  <nav class="nav">
+    <a href="#collectie">Collectie</a>
+    <a href="#story">Ons verhaal</a>
+    <a href="#nieuwsbrief">Nieuwsbrief</a>
+  </nav>
+
+  <div class="header-actions">
+    <button class="icon-btn" aria-label="Zoeken">⌕</button>
+    <button class="icon-btn cart" aria-label="Winkelwagen">🛍</button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Nieuwe collectie · 2026</span>
+
+        <h1>
+          Ontwerp je<br>
+          <span class="kinetic">eigen ritme.</span>
+        </h1>
+
+        <p>
+          Premium producten met een rustige basis en elektrische details.
+          Gemaakt voor mensen die kwaliteit voelen voordat ze het zien.
+        </p>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#collectie">Shop de collectie</a>
+          <a class="btn btn-ghost" href="#story">Ontdek NOVA</a>
+        </div>
+      </div>
+
+      <article class="hero-card reveal">
+        <div class="product-preview">
+          <img
+            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
+            alt="Premium product preview"
+            loading="eager"
+          >
+        </div>
+
+        <div class="product-info">
+          <div>
+            <strong>NOVA Signature 01</strong><br>
+            <span style="opacity:.7">Limited edition</span>
+          </div>
+          <div class="price">€ 249</div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Gratis verzending vanaf €50</span>
+      <span>30 dagen retour</span>
+      <span>CO₂-neutraal verzonden</span>
+      <span>Handgemaakt in Europa</span>
+      <span>Gratis verzending vanaf €50</span>
+      <span>30 dagen retour</span>
+      <span>CO₂-neutraal verzonden</span>
+      <span>Handgemaakt in Europa</span>
+    </div>
+  </div>
+
+  <!-- PRODUCTEN -->
+  <section class="section" id="collectie">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <h2>De collectie</h2>
+          <p>Functionele vorm, rustige materialen en accents die de aandacht vasthouden.</p>
+        </div>
+        <a class="btn btn-ghost" href="#" style="color:var(--ink);border-color:rgba(13,15,18,.2);background:transparent">
+          Alles bekijken
+        </a>
+      </div>
+
+      <div class="products">
+        <article class="card reveal">
+          <span class="card-tag">Nieuw</span>
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80" alt="Product 1" loading="lazy">
+          </div>
+          <h3>Aura Headphones</h3>
+          <div class="card-meta">
+            <span>€ 189</span>
+            <button class="add" data-name="Aura Headphones">Toevoegen</button>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <span class="card-tag">Bestseller</span>
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80" alt="Product 2" loading="lazy">
+          </div>
+          <h3>Orbit Watch</h3>
+          <div class="card-meta">
+            <span>€ 329</span>
+            <button class="add" data-name="Orbit Watch">Toevoegen</button>
+          </div>
+        </article>
+
+        <article class="card wide reveal">
+          <span class="card-tag">Limited</span>
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80" alt="Product 3" loading="lazy">
+          </div>
+          <h3>Velocity Runner</h3>
+          <div class="card-meta">
+            <span>€ 159</span>
+            <button class="add" data-name="Velocity Runner">Toevoegen</button>
+          </div>
+        </article>
+
+        <article class="card tall reveal">
+          <span class="card-tag">Essential</span>
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80" alt="Product 4" loading="lazy">
+          </div>
+          <h3>Field Backpack</h3>
+          <div class="card-meta">
+            <span>€ 119</span>
+            <button class="add" data-name="Field Backpack">Toevoegen</button>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <span class="card-tag">Nieuw</span>
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80" alt="Product 5" loading="lazy">
+          </div>
+          <h3>Pulse Speaker</h3>
+          <div class="card-meta">
+            <span>€ 99</span>
+            <button class="add" data-name="Pulse Speaker">Toevoegen</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story" id="story">
+    <div class="container story-inner">
+      <div class="reveal">
+        <h2>
+          Rust in de basis.<br>
+          Energie in de details.
+        </h2>
+
+        <p>
+          NOVA combineert aardse materialen met dopamine-accenten.
+          Elk product is ontworpen om dagelijks te gebruiken, lang mee te gaan
+          en visueel rust te geven zonder saai te worden.
+        </p>
+      </div>
+
+      <div class="stats reveal">
+        <div class="stat">
+          <strong>12k+</strong>
+          <span>Tevreden klanten</span>
+        </div>
+        <div class="stat">
+          <strong>98%</strong>
+          <span>Would buy again</span>
+        </div>
+        <div class="stat">
+          <strong>48u</strong>
+          <span>Levertijd in NL & BE</span>
+        </div>
+        <div class="stat">
+          <strong>100%</strong>
+          <span>Recyclebare verpakking</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter" id="nieuwsbrief">
+    <div class="container">
+      <div class="newsletter-box reveal">
+        <div>
+          <h2>Word eerst toegelaten.</h2>
+          <p style="opacity:.8">
+            Ontvang early access, restocks en exclusieve drops.
+            Geen spam — alleen dingen die er toe doen.
+          </p>
+        </div>
+
+        <form class="form" id="newsletterForm">
+          <input type="email" placeholder="jouw@email.nl" required aria-label="E-mailadres">
+          <button type="submit">Aanmelden</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="#" style="color:#fff">
+          <span class="brand-dot"></span>
+          NOVA
+        </a>
+        <p style="max-width:320px;margin-top:16px">
+          Premium essentials voor mensen die bewust kiezen voor kwaliteit, rust en karakter.
+        </p>
+      </div>
+
+      <div>
+        <h4>Shop</h4>
+        <a href="#">Nieuw binnen</a>
+        <a href="#">Bestsellers</a>
+        <a href="#">Accessoires</a>
+        <a href="#">Giftcards</a>
+      </div>
+
+      <div>
+        <h4>Service</h4>
+        <a href="#">Verzending</a>
+        <a href="#">Retourneren</a>
+        <a href="#">Veelgestelde vragen</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div>
+        <h4>Volg ons</h4>
+        <a href="#">Instagram</a>
+        <a href="#">TikTok</a>
+        <a href="#">Pinterest</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 NOVA. Alle rechten voorbehouden.</span>
+      <span>Privacy · Voorwaarden · Cookies</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   MICRO-INTERACTIES
+   - Cursor-follow glow op CTA’s
+   - Add-to-cart feedback
+   - Reveal fallback
+========================================================= */
+
+// Cursor glow op knoppen
+document.querySelectorAll(".btn").forEach(btn => {
+  btn.addEventListener("pointermove", e => {
+    const rect = btn.getBoundingClientRect();
+    btn.style.setProperty("--x", `${e.clientX - rect.left}px`);
+    btn.style.setProperty("--y", `${e.clientY - rect.top}px`);
+  });
+});
+
+// Add-to-cart micro-interactie
+document.querySelectorAll(".add").forEach(button => {
+  button.addEventListener("click", () => {
+    const original = button.textContent;
+    button.textContent = "Toegevoegd ✓";
+    button.style.background = "var(--lime)";
+    button.style.color = "var(--ink)";
+
+    setTimeout(() => {
+      button.textContent = original;
+      button.style.background = "";
+      button.style.color = "";
+    }, 1400);
+  });
+});
+
+// Reveal fallback voor browsers zonder CSS scroll timelines
+const revealItems = document.querySelectorAll(".reveal");
+
+if (!CSS.supports("animation-timeline", "view()")) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: .18 });
+
+  revealItems.forEach(item => observer.observe(item));
+}
+
+// Nieuwsbrief-feedback
+document.getElementById("newsletterForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const button = e.target.querySelector("button");
+  button.textContent = "Aangemeld ✓";
+  setTimeout(() => button.textContent = "Aanmelden", 1800);
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>

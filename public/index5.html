@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heart, scramble, curved scrollbar, domino clock and shadow title</title>
+
+<style>
+@import url(https://fonts.bunny.net/css?family=noto-sans-mono:400);
+@import url(https://fonts.bunny.net/css?family=krub:200i,300);
+@import url("https://fonts.googleapis.com/css2?family=Staatliches&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap");
+
+@layer base, heart, scramble, scrollbar, clock;
+
+@property --page-offset {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 75;
+}
+
+/* ------------------------------------------------------------ base */
+@layer base {
+  * { box-sizing: border-box; }
+
+  :root {
+    color-scheme: dark;
+    --bg: rgb(0 0 0);
+    --txt: rgb(245 245 245);
+    --cta: rgb(94 165 0);
+    --clr-lines: rgb(255 255 255 / .25);
+
+    /* page rhythm: hero = heart screen, track = scroll distance of the scramble */
+    --hero: 100svh;
+    --track: 500svh;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--txt);
+    font-family: 'Krub', system-ui, sans-serif;
+    line-height: 1.4;
+  }
+
+  p { font-size: .8rem; opacity: .9; }
+
+  @supports not (animation-timeline: scroll()) {
+    body::before {
+      content: "Sorry, your browser doesn't support animation-timeline";
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      translate: -50% 0;
+      font-size: .8rem;
+      z-index: 5;
+    }
+    .scramble { --page-offset: 0; } /* show the text clean instead of scattered */
+  }
+}
+
+/* ------------------------------------------------------------ 1. pixel heart */
+@layer heart {
+  .hero {
+    height: var(--hero);
+    display: grid;
+    place-items: center;
+  }
+
+  .heart {
+    all: unset;
+    cursor: pointer;
+    border-radius: 1rem;
+  }
+  .heart:focus-visible {
+    outline: 2px solid var(--cta);
+    outline-offset: 1.2rem;
+  }
+
+  .pixels {
+    --cell: clamp(14px, 4.4svh, 30px);
+    display: grid;
+    grid-template-columns: repeat(9, var(--cell));
+    grid-auto-rows: var(--cell);
+    gap: calc(var(--cell) * .3);
+  }
+
+  .px {
+    background: var(--c);
+    animation: pop .5s var(--d) both;
+  }
+
+  @keyframes pop {
+    0%   { opacity: 0;  transform: scale(0); }
+    50%  { opacity: .5; transform: scale(1.2); }
+    100% { opacity: 1;  transform: scale(1); }
+  }
+}
+
+/* ------------------------------------------------------------ 2. scramble on scroll */
+@layer scramble {
+  :root {
+    --first-word-color: var(--cta);
+    --f-size: clamp(1.4rem, 3vw + .6rem, 2.6rem);
+  }
+
+  .track { height: var(--track); }
+
+  /* pinned screen: the text stays put while you scroll through the track */
+  .stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: grid;
+    place-items: center;
+    overflow: clip;
+  }
+
+  .scramble {
+    width: min(92%, 44rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: .5em 1ch;
+    font-family: 'Noto Sans Mono', ui-monospace, monospace;
+    font-size: var(--f-size);
+
+    animation: unscramble linear both;
+    animation-timeline: scroll(root block);
+    /* starts when the stage pins, finishes a bit before it unpins */
+    animation-range: var(--hero) calc(var(--hero) + var(--track) - 100svh - 60svh);
+    animation-timing-function: steps(100);
+  }
+
+  @keyframes unscramble {
+    to { --page-offset: 0; }
+  }
+
+  .word {
+    display: flex;
+    perspective: 300px;
+    transform-style: preserve-3d;
+  }
+  .word:nth-child(2) { color: var(--first-word-color); }
+
+  .word > span {
+    /* --i is set per letter from JS */
+    --dir: calc(1 - 2 * mod(var(--i), 2));
+    --rand: calc(mod((var(--i) * 7 + 20), 4) - 4);
+    --wave: sin(calc(var(--i) * 17deg));
+
+    /* y position */
+    --start-y: calc((var(--rand) + var(--wave)) * var(--dir) * var(--page-offset) * 1px);
+
+    /* depth */
+    --z: calc(abs(var(--rand) * 2 + var(--wave)));
+    --depth-factor: calc(var(--page-offset) * 0.02);
+    --start-z: calc(var(--z) * var(--depth-factor) * 13px);
+
+    display: inline-block;
+    position: relative;
+    transform: translate3d(0, var(--start-y), var(--start-z));
+  }
+
+  /* scroll cue, fades out after a little scrolling */
+  .mouse {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    translate: -50% 0;
+    width: 60px;
+    height: 100px;
+    color: var(--cta);
+    pointer-events: none;
+    display: none;
+
+    @supports (animation-timeline: scroll()) {
+      display: block;
+      animation: cue-out linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0px 40svh;
+    }
+  }
+  @keyframes cue-out { to { opacity: 0; } }
+}
+
+/* ------------------------------------------------------------ 3. curved scrollbar */
+@layer scrollbar {
+  .showcase {
+    min-height: 100svh;
+    padding: 14svh 1rem;
+  }
+
+  .showcase header {
+    width: min(100%, 60ch);
+    margin: 0 auto 2rem;
+    text-align: center;
+    text-wrap: balance;
+  }
+  .showcase header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+  }
+
+  .wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    width: min(100%, 640px);
+    margin: 0 auto;
+  }
+
+  .scroll-container {
+    --card-border-radius: 50px;
+
+    --thumb-color: rgb(0, 188, 255);
+    --thumb-color-active: dodgerblue;
+    --thumb-width: 4;
+    --thumb-width-active: 6;
+
+    --track-color: transparent;
+    --track-color-active: light-dark(#EEE, #222);
+    --track-width: 4;
+    --track-width-active: 6;
+
+    position: relative;
+    height: min(460px, 70svh);
+    contain: size;
+    border: 1px solid var(--clr-lines);
+    border-radius: var(--card-border-radius);
+    overflow: hidden;
+
+    & h2 {
+      text-wrap: balance;
+      font-size: 1.1rem;
+    }
+    & img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* styling for the second card */
+    &.box-2 {
+      --card-border-radius: 20px;
+      --thumb-color: rgb(154, 230, 0);
+      --thumb-color-active: rgb(124, 207, 0);
+    }
+  }
+
+  .scroll-content {
+    height: 100%;
+    padding: 1rem 1.5rem 1rem 1rem; /* space on right for scrollbar */
+    overflow-y: scroll;             /* keep scrolling functional */
+
+    /* hide native scrollbars */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .scrollbar-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+
+    &:has(:active) {
+      --thumb-width: var(--thumb-width-active);
+      --track-width: var(--track-width-active);
+      --track-color: var(--track-color-active);
+    }
+  }
+
+  .scrollbar-track {
+    fill: none;
+    stroke: var(--track-color);
+    stroke-width: var(--track-width);
+    stroke-linecap: round;
+    transition: stroke-width 150ms ease-in-out, stroke 150ms ease-in-out;
+  }
+
+  .scrollbar-thumb {
+    fill: none;
+    stroke: var(--thumb-color);
+    stroke-width: var(--thumb-width);
+    stroke-linecap: round;
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+    transition: stroke-width 150ms ease-in-out, stroke 150ms ease-in-out;
+
+    &:active {
+      stroke: var(--thumb-color-active);
+      cursor: grabbing;
+    }
+  }
+}
+
+/* ------------------------------------------------------------ 4. split: domino clock | shadow title */
+@layer clock {
+
+  /* the split: half clock, half title */
+  .split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(100svh, auto);
+  }
+
+  @media (max-width: 800px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+      grid-auto-rows: minmax(70svh, auto);
+    }
+  }
+
+  /* ---- left half: clock on black ---- */
+  .clock-section {
+    container-type: inline-size;   /* lets the clock scale to its own half (cqw) */
+    padding: 10svh 1rem;
+    display: grid;
+    place-content: center;
+    gap: 2rem;
+    background: rgb(19 19 19);
+    color: rgb(240 240 240);
+    font-family: "Staatliches", cursive;
+
+    & h2 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4cqw, 3rem);
+    }
+    & h2 > span {
+      font-size: .33em;
+      color: rgb(140 140 140);
+    }
+
+    & .dominos-container {
+      display: flex;
+      gap: 2em;
+      align-items: center;
+      font-size: 1cqw;            /* was 1vw: now relative to this half */
+    }
+
+    & .colon,
+    & .ampm {
+      font-size: 5em;
+    }
+
+    & .domino {
+      width: 12em;
+      background: linear-gradient(to bottom right, rgb(39, 39, 39), rgb(17, 17, 17));
+      box-shadow:
+        inset 0.1em 0.1em 0.2em rgba(255, 255, 255, 0.2),
+        inset -0.1em -0.1em 0.2em rgba(0, 0, 0, 0.9),
+        0.1em 0.1em 2em rgba(0, 0, 0, 1);
+      display: grid;
+      border-radius: 1em;
+      gap: 2em;
+      padding: 2em;
+    }
+
+    /* the white divider between the two halves of a domino */
+    & .domino::before {
+      content: "";
+      height: 0.25em;
+      background: white;
+      grid-row: 2;
+      border-radius: 0.25em;
+    }
+
+    & .part {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1em;
+    }
+
+    & .part span {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      border-radius: 50%;
+      box-shadow:
+        inset 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.7),
+        inset -0.1em -0.1em 0.1em rgba(255, 255, 255, 0.1);
+      background-image: linear-gradient(transparent 50%, rgb(240 240 240) 50%);
+      background-size: 100% 220%;
+      background-position: 0 0%;
+      transition: background-position 0.25s ease;
+    }
+
+    & .part span[data-active="1"] {
+      background-position: 0 -90%;
+    }
+  }
+
+  /* ---- right half: grey panel with the shadow title ---- */
+  .shadow-panel {
+    container-type: inline-size;
+    isolation: isolate;            /* keeps the z-index:-1 shadow above the grey background */
+    overflow: clip;
+    display: grid;
+    place-items: center;
+    padding: 10svh 1rem;
+    background: #aaa;
+
+    & h1 {
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      color: white;
+      font-size: 9cqw;             /* was 15vw: too wide for "Development" */
+      line-height: 1;
+      margin: 0;
+      white-space: nowrap;
+
+      background: linear-gradient(-90deg, rgb(223 223 223) 0%, rgb(190 190 190) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+    }
+
+    & h1::before {
+      content: attr(data-text);
+      -webkit-text-fill-color: black;
+      position: absolute;
+      z-index: -1;
+      white-space: nowrap;
+      filter: blur(14px);
+      transform: skew(67deg, 0) translate(-20%, 15%) scaleY(0.5);
+      -webkit-mask-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%);
+      mask-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%);
+      padding: 0 22px;
+    }
+  }
+}
+
+/* unlayered, so it wins over everything above */
+@media (prefers-reduced-motion: reduce) {
+  .px { animation: none; }
+  .scramble { animation: none; --page-offset: 0; }
+  .mouse { animation: none; }
+  .clock-section .part span { transition: none; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 1. heart -->
+<section class="hero">
+  <button class="heart" id="heartBtn" type="button" aria-label="Pixel heart. Press to replay the animation.">
+    <span class="pixels" id="heart"></span>
+  </button>
+</section>
+
+<!-- 2. scramble (pinned while you scroll through the track) -->
+<section class="track">
+  <div class="stage">
+    <div class="scramble" id="scramble" role="heading" aria-level="2"></div>
+  </div>
+</section>
+
+<!-- 3. curved scrollbars -->
+<section class="showcase">
+  <header>
+    <h2>Scroll inside</h2>
+    <p>Grab a scrollbar thumb and drag it up or down.</p>
+  </header>
+
+  <div class="wrapper">
+    <section class="scroll-container" data-scrollbar>
+      <div class="scroll-content">
+        <h2>Grab the scrollbar thumb and scroll up or down.</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi placeat rem at esse reiciendis ullam veritatis sapiente sit ducimus ea magnam nihil vero corrupti quo quae.</p>
+        <img src="https://images.unsplash.com/photo-1759392658577-4324fb89b991?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjEzMzUxNTl8&ixlib=rb-4.1.0&q=80&w=400" alt="random" width="300" height="150">
+        <p>Veritatis et repellendus, consequatur dicta saepe vel natus aliquam reprehenderit accusamus voluptatem commodi, minus eos nihil quae.</p>
+        <p>Sunt consectetur asperiores fuga quasi nobis vitae et commodi error deserunt perspiciatis, modi eaque iste eligendi quod esse aliquam.</p>
+        <p>Suscipit possimus mollitia ut minus commodi facilis distinctio assumenda corrupti voluptate, ipsa voluptates minima ex nam exercitationem?</p>
+        <p>Laboriosam beatae consequatur omnis repellat consequuntur obcaecati! Voluptatibus sunt quibusdam optio nihil delectus cumque unde omnis voluptatum.</p>
+        <p>In id itaque ullam totam, dolor blanditiis praesentium, at laborum esse molestias fugit dolorum sapiente dolores quo animi ducimus provident.</p>
+        <p>Et suscipit dolores, non ullam consequuntur illo cumque perspiciatis quos voluptate impedit quas? Similique omnis magnam iste quasi aspernatur neque.</p>
+      </div>
+    </section>
+
+    <section class="scroll-container box-2" data-scrollbar>
+      <div class="scroll-content">
+        <h2>Less border radius on this one</h2>
+        <p>Ut quasi magni rerum magnam, earum officiis asperiores placeat maiores ullam sint debitis culpa! Nemo est, modi dolor eos, blanditiis, neque ullam facere.</p>
+        <p>Est rem voluptates nihil culpa fugiat possimus provident a adipisci facilis, molestias quos sed pariatur cum aperiam vitae. Repellat natus iure omnis.</p>
+        <p>In id itaque ullam totam, dolor blanditiis praesentium, at laborum esse molestias fugit dolorum sapiente dolores quo animi ducimus provident.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi placeat rem at esse reiciendis ullam veritatis sapiente sit ducimus ea magnam nihil.</p>
+        <p>Veritatis et repellendus, consequatur dicta saepe vel natus aliquam reprehenderit accusamus voluptatem commodi, minus eos nihil quae.</p>
+        <p>Sunt consectetur asperiores fuga quasi nobis vitae et commodi error deserunt perspiciatis, modi eaque iste eligendi quod esse aliquam.</p>
+        <p>Suscipit possimus mollitia ut minus commodi facilis distinctio assumenda corrupti voluptate, ipsa voluptates minima ex nam exercitationem?</p>
+        <p>Laboriosam beatae consequatur omnis repellat consequuntur obcaecati! Voluptatibus sunt quibusdam optio nihil delectus cumque unde omnis voluptatum.</p>
+        <p>Et suscipit dolores, non ullam consequuntur illo cumque perspiciatis quos voluptate impedit quas? Similique omnis magnam iste quasi aspernatur neque.</p>
+        <p>Quisquam porro esse fuga ducimus inventore, repellendus ad omnis perferendis velit atque commodi natus fugit, aliquid incidunt, eveniet odit.</p>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- 4. split: domino clock (left, black) | shadow title (right, grey) -->
+<section class="split">
+
+  <div class="clock-section">
+    <h2>Domino Clock <span class="time" id="clockTime">0:00:00 PM</span></h2>
+
+    <!-- decorative: the time is already available as text in the heading -->
+    <div class="dominos-container" aria-hidden="true">
+      <div class="domino"></div>
+      <div class="colon">:</div>
+      <div class="domino"></div>
+      <div class="domino"></div>
+      <div class="colon">:</div>
+      <div class="domino"></div>
+      <div class="domino"></div>
+      <div class="ampm" id="clockAmPm">AM</div>
+    </div>
+  </div>
+
+  <div class="shadow-panel">
+    <h1 data-text="Development">Development</h1>
+  </div>
+
+</section>
+
+<!-- scroll cue -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mouse" aria-hidden="true">
+  <path d="M6 3m0 4a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-4a4 4 0 0 1 -4 -4z" />
+  <path d="M12 7l0 4" />
+  <path d="M8 26l4 4l4 -4">
+    <animateTransform attributeType="XML" attributeName="transform" type="translate" values="0 0; 0 4; 0 0" dur="1s" repeatCount="indefinite" />
+  </path>
+</svg>
+
+<script>
+/* ---------------------------------------------------------------
+   1. Pixel heart  (X = filled cell, one colour per column)
+---------------------------------------------------------------- */
+const HEART = [
+  '.XXX.XXX.',
+  'XXXXXXXXX',
+  'XXXXXXXXX',
+  'XXXXXXXXX',
+  '.XXXXXXX.',
+  '..XXXXX..',
+  '...XXX...',
+  '....X....'
+];
+const COLORS = ['#0080FF', '#0EA7A5', '#50C878', '#FFD700', '#FA7A35', '#E24666', '#B53389', '#708090', '#918E85'];
+
+const heart = document.getElementById('heart');
+
+function buildHeart() {
+  heart.replaceChildren();
+  HEART.forEach((row, r) => {
+    [...row].forEach((ch, c) => {
+      if (ch !== 'X') return;
+      const px = document.createElement('span');
+      px.className = 'px';
+      px.style.cssText = `grid-area:${r + 1}/${c + 1};--c:${COLORS[c]};--d:${(c + 1) * 0.1}s`;
+      heart.appendChild(px);
+    });
+  });
+}
+buildHeart();
+document.getElementById('heartBtn').addEventListener('click', buildHeart); // click = replay
+
+/* ---------------------------------------------------------------
+   2. Scramble text - change the sentence here
+---------------------------------------------------------------- */
+const TEXT = 'Meaning emerges, one letter at a time.';
+const scramble = document.getElementById('scramble');
+scramble.setAttribute('aria-label', TEXT);
+
+TEXT.split(' ').forEach(word => {
+  const w = document.createElement('span');
+  w.className = 'word';
+  w.setAttribute('aria-hidden', 'true');
+  [...word].forEach((ch, i) => {
+    const s = document.createElement('span');
+    s.style.setProperty('--i', i + 1);
+    s.textContent = ch;
+    w.appendChild(s);
+  });
+  scramble.appendChild(w);
+});
+
+/* ---------------------------------------------------------------
+   3. Curved scrollbars
+---------------------------------------------------------------- */
+const OFFSET = 7;            // distance from edge of container
+const EXTRA_INSET = 2;
+const MIN_START_RATIO = 0.8;
+const MIN_THUMB = 20;
+const SEGMENTS = 50;
+
+document.querySelectorAll('[data-scrollbar]').forEach(initCurvedScrollbar);
+
+function initCurvedScrollbar(container) {
+  const content = container.querySelector('.scroll-content');
+
+  // create and add SVG
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.classList.add('scrollbar-svg');
+  svg.setAttribute('aria-hidden', 'true');
+
+  const trackPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  trackPath.classList.add('scrollbar-track');
+
+  const thumbPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  thumbPath.classList.add('scrollbar-thumb');
+
+  svg.appendChild(trackPath);
+  svg.appendChild(thumbPath);
+  container.appendChild(svg);
+
+  // state
+  let pathLength = 0;
+  let thumbLength = 50;
+  let dragging = false;
+  let pointerId = null;
+
+  // update track + thumb size
+  function updatePath() {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    const r = parseFloat(getComputedStyle(container).borderRadius) || 0;
+
+    const effectiveRadius = Math.max(r - OFFSET, 0);
+    const trackX = w - OFFSET;
+    const topY = OFFSET;
+    const bottomY = h - OFFSET;
+    const cornerX = trackX - effectiveRadius;
+
+    // x start point - never past the corner radius start point
+    const minStartX = w * MIN_START_RATIO;
+    let startX = trackX - effectiveRadius * EXTRA_INSET;
+    if (startX < minStartX) startX = minStartX;
+    if (startX > cornerX) startX = cornerX;
+
+    const d = `
+      M ${startX} ${topY}
+      L ${cornerX} ${topY}
+      A ${effectiveRadius} ${effectiveRadius} 0 0 1 ${trackX} ${topY + effectiveRadius}
+      L ${trackX} ${bottomY - effectiveRadius}
+      A ${effectiveRadius} ${effectiveRadius} 0 0 1 ${cornerX} ${bottomY}
+      L ${startX} ${bottomY}
+    `;
+    trackPath.setAttribute('d', d);
+
+    // thumb length based on content height
+    pathLength = trackPath.getTotalLength();
+    const ratio = content.clientHeight / content.scrollHeight;
+    thumbLength = Math.max(MIN_THUMB, pathLength * ratio);
+
+    updateThumb();
+  }
+
+  // thumb follows the track, sampled in many small segments to hug the curves
+  function updateThumb() {
+    const scrollableHeight = content.scrollHeight - content.clientHeight || 1;
+    const scrollRatio = content.scrollTop / scrollableHeight;
+    const startOffset = (pathLength - thumbLength) * scrollRatio;
+    const endOffset = startOffset + thumbLength;
+
+    const points = [];
+    for (let i = 0; i <= SEGMENTS; i++) {
+      const t = startOffset + ((endOffset - startOffset) / SEGMENTS) * i;
+      const p = trackPath.getPointAtLength(t);
+      points.push(`${p.x} ${p.y}`);
+    }
+    thumbPath.setAttribute('d', `M ${points[0]} ${points.slice(1).map(pt => `L ${pt}`).join(' ')}`);
+  }
+
+  // grab thumb
+  thumbPath.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    dragging = true;
+    pointerId = e.pointerId;
+    thumbPath.setPointerCapture(pointerId);
+  });
+
+  // drag thumb
+  window.addEventListener('pointermove', e => {
+    if (!dragging || e.pointerId !== pointerId) return;
+    const rect = container.getBoundingClientRect();
+    let ratio = (e.clientY - rect.top) / rect.height;
+    ratio = Math.max(0, Math.min(1, ratio));
+    content.scrollTop = ratio * (content.scrollHeight - content.clientHeight);
+    updateThumb();
+  });
+
+  // release thumb
+  window.addEventListener('pointerup', e => {
+    if (!dragging || e.pointerId !== pointerId) return;
+    dragging = false;
+    try { thumbPath.releasePointerCapture(pointerId); } catch {}
+    pointerId = null;
+  });
+
+  // events
+  content.addEventListener('scroll', updateThumb);
+  window.addEventListener('resize', updatePath);
+  window.addEventListener('load', updatePath);  // fonts/images change content height
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(updatePath);
+
+  updatePath();
+}
+
+/* ---------------------------------------------------------------
+   4. Domino clock
+   Each string = one domino: first 9 chars = top half, last 9 = bottom half
+   (3x3 pip grid each). Index = the number shown (0-12).
+---------------------------------------------------------------- */
+const NUMBER_DOTS = [
+  "000000000000000000",
+  "000010000000000000",
+  "000010000000010000",
+  "100000001000010000",
+  "100000001100000001",
+  "100010001100000001",
+  "100010001100010001",
+  "101000101100010001",
+  "101000101101000101",
+  "101010101101000101",
+  "101010101101010101",
+  "101101101101010101",
+  "101101101101101101"
+];
+
+const dominos = [...document.querySelectorAll('.clock-section .domino')];
+const ampmEl = document.getElementById('clockAmPm');
+const timeEl = document.getElementById('clockTime');
+
+// build the two 3x3 halves inside every domino, then cache the 18 pips of each
+const PIPS_HALF = '<span></span>'.repeat(9);
+const dominoPips = dominos.map(domino => {
+  domino.innerHTML =
+    `<div class="part part-top">${PIPS_HALF}</div><div class="part part-bottom">${PIPS_HALF}</div>`;
+  return [...domino.querySelectorAll('.part span')];
+});
+
+function getValues() {
+  const d = new Date();
+  const h = d.getHours();
+  const m = d.getMinutes();
+  const s = d.getSeconds();
+  return {
+    values: [h % 12 || 12, Math.floor(m / 10), m % 10, Math.floor(s / 10), s % 10],
+    ampm: h >= 12 ? 'pm' : 'am',
+    time: d.toLocaleTimeString('en-US')
+  };
+}
+
+function tick() {
+  const { values, ampm, time } = getValues();
+
+  dominoPips.forEach((pips, i) => {
+    const pattern = NUMBER_DOTS[values[i]];
+    pips.forEach((pip, j) => { pip.dataset.active = pattern[j]; });
+  });
+
+  ampmEl.textContent = ampm;
+  timeEl.textContent = time;
+}
+
+tick();
+setInterval(tick, 1000);
+</script>
+
+</body>
+</html>

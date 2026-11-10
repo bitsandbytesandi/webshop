@@ -7,9 +7,9 @@ export default function ProductsPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight">Alle producten</h1>
+        <h1 className="text-3xl font-bold tracking-tight">All products</h1>
         <p className="text-muted-foreground mt-2">
-          {products.length} producten beschikbaar
+          {products.length} products avaiable
         </p>
       </div>
 

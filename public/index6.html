@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevNest Gent | Developer Pods in the Green</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html { font-size: calc(10000vw / 1920); }
+@media (min-aspect-ratio: 1440 / 1080) { html { font-size: calc(10000vh / 1080); } }
+
+:root {
+  --main-font: "Work Sans", system-ui, sans-serif;
+  --color-light-purity: #E0D8EB;
+  --color-fat-tuesday: #341F37;
+  --color-bashful-pancy: #D8CEE6;
+  --color-sugar-crystal: #F9F5FF;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; }
+body, main { overflow-x: hidden; }
+body {
+  height: 100%; margin: 0; background: var(--color-light-purity); color: var(--color-fat-tuesday);
+  font-family: var(--main-font); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; background-color: var(--color-light-purity);
+  background-image: url('https://cdn.zajno.com/dev/codepen/cicada/texture.png'); background-repeat: repeat; mix-blend-mode: soft-light;
+}
+body::after {
+  content: ''; position: fixed; bottom: -3.76rem; left: 50%; width: 22.42rem; height: 8.86rem;
+  background: var(--color-sugar-crystal); filter: blur(2.5rem); transform: translateX(-50%); z-index: 0;
+}
+main { position: relative; width: 100%; height: 10000px; flex: 1 0 auto; padding: .1rem; } /* tall on purpose: gives ScrollTrigger room to scrub */
+a { text-decoration: none; outline: none; color: inherit; }
+img { max-width: 100%; height: auto; }
+
+/* ---------- header ---------- */
+.header { position: fixed; top: 0; left: 0; width: 100%; max-width: 100vw; z-index: 100; }
+.header-wrapp { display: flex; align-items: center; justify-content: space-between; padding: .3rem .4rem; }
+.header-left { display: flex; align-items: center; gap: 1.37rem; }
+.header-main { display: flex; align-items: center; gap: .16rem; }
+.header-logo { font-size: .28rem; font-weight: 600; letter-spacing: -.012rem; white-space: nowrap; }
+.header-title { max-width: .89rem; font-size: .12rem; font-weight: 500; letter-spacing: -.005rem; line-height: 1.2; margin-top: .04rem; }
+.header-search { display: flex; align-items: center; gap: .08rem; }
+.header-search__btn { width: .13rem; }
+.header-search__btn svg { display: block; width: 100%; }
+.header-search__input { background: transparent; border: none; font: 500 .16rem var(--main-font); letter-spacing: -.0065rem; color: inherit; outline: none; width: 1rem; }
+.header-search__input::placeholder { color: var(--color-fat-tuesday); transition: all .3s; }
+.header-search__input:focus::placeholder { color: transparent; }
+.header-right { display: flex; align-items: center; gap: .78rem; }
+.header-contact { position: relative; font: 500 .16rem var(--main-font); letter-spacing: -.0065rem; background: none; color: var(--color-fat-tuesday); border: none; padding: 0; cursor: pointer; }
+.header-contact::before { content: ''; position: absolute; bottom: -.04rem; left: 0; width: 100%; height: 1px; background: currentColor; }
+.header-menu { display: flex; align-items: center; justify-content: center; width: .35rem; height: .35rem; background: var(--color-fat-tuesday); border-radius: 50%; border: 1px solid var(--color-fat-tuesday); cursor: pointer; }
+.header-menu svg { width: .1465rem; }
+
+/* ---------- banner ---------- */
+.banner {
+  position: fixed; top: 0; left: 0; width: 100%; max-width: 100vw; height: 100%; max-height: 100vh;
+  display: flex; align-items: center; justify-content: center; padding: 0 .4rem; overflow: hidden; z-index: 1;
+}
+.banner-slide { z-index: 2; }
+.banner-title { position: absolute; top: 1.95rem; max-width: 9.57rem; font-size: 1rem; line-height: 1.1; letter-spacing: -.07rem; text-align: center; z-index: 3; }
+.banner-title span { position: relative; display: inline-block; }
+.banner-title span::before { content: ""; position: absolute; bottom: -.04rem; left: 0; width: 100%; border-bottom: 4px solid currentColor; transform: rotate(-3deg); }
+.banner-subtitle { position: absolute; top: 2.8rem; font-size: 1rem; line-height: 1.1; letter-spacing: -.07rem; text-align: center; opacity: 0; z-index: 1; }
+.banner-text { position: absolute; top: 1.89rem; max-width: 6.87rem; font-size: .42rem; line-height: 1.1; letter-spacing: -.0295rem; opacity: 0; z-index: 1; }
+.banner-tree { position: absolute; bottom: 0; left: 50%; width: 19rem; transform: translateX(-50%); transform-origin: bottom; z-index: 2; }
+.banner-tree img, .banner-tree video { display: block; width: 100%; }
+
+/* ---------- wings (decor behind the banner) ---------- */
+.wings { position: fixed; top: 0; left: 0; width: 100%; max-width: 100vw; height: 100%; max-height: 100vh; overflow: hidden; }
+.wings-svg { position: absolute; left: 50%; bottom: .95rem; width: 95vw; transform: translateX(-50%); z-index: 3; }
+.wings-svg svg { display: block; width: 100%; height: auto; }
+
+/* ---------- tree diagram ---------- */
+.tree { position: fixed; top: 0; left: 0; width: 100%; max-width: 100vw; height: 100%; max-height: 100vh; overflow: hidden; z-index: 1; }
+.tree-name { position: absolute; top: .92rem; left: 50%; font-size: .51rem; letter-spacing: -.0357rem; opacity: 0; transform: translateX(-50%); }
+.tree-wrapp { position: absolute; top: 3.32rem; left: 50%; display: block; width: 9.5rem; transform: translateX(-50%); z-index: 1; }
+.tree-svg { display: none; width: 100%; height: auto; }
+.tree-circle { position: absolute; top: 1rem; left: 50%; width: 8.62rem; aspect-ratio: 1/1; box-shadow: 0 0 0 1px var(--color-fat-tuesday); border-radius: 50%; transform: translateX(-50%) scale(0); }
+.tree-circle__small { box-shadow: 0 0 0 3px var(--color-fat-tuesday); }
+.tree-title { position: absolute; max-width: 2rem; font-size: .2rem; font-weight: 400; letter-spacing: -.009rem; padding: .18rem; cursor: pointer; z-index: 2; }
+.tree-title span { display: inline-block; opacity: 0; transform: translateY(100%); }
+.tree-title_top { top: -.25rem; left: 50%; transform: translate(-50%, -100%); transform-origin: bottom center; }
+.tree-title_left-top { top: .57rem; right: 6.11rem; transform: translate(-100%, -50%); transform-origin: bottom right; }
+.tree-title_left { top: 2.13rem; left: -.1rem; transform: translate(-100%, 0%); transform-origin: bottom right; }
+.tree-title_right-top { top: .57rem; left: 5.69rem; transform: translate(100%, -50%); transform-origin: bottom left; }
+.tree-title_right { top: 2.13rem; right: -.1rem; transform: translate(100%, 0%); transform-origin: bottom left; }
+.tree-title__decor { position: absolute; top: 50%; width: .08rem; height: auto; transform: translateY(-50%); opacity: 0; }
+.tree-title__decor.left { left: .06rem; }
+.tree-title__decor.right { right: .06rem; }
+.tree-ball { position: absolute; width: .14rem; height: .14rem; cursor: pointer; aspect-ratio: 1/1; opacity: 0; z-index: 2; }
+.tree-ball_top { top: 0; left: 50%; transform: translate(-50%, -100%); }
+.tree-ball_left-top { top: .6rem; right: 7.39rem; transform: translate(0%, -50%); }
+.tree-ball_left { top: 2.5rem; left: 0; transform: translate(-50%, -100%); }
+.tree-ball_right-top { top: .6rem; left: 7.39rem; transform: translate(0%, -50%); }
+.tree-ball_right { top: 2.5rem; right: 0; transform: translate(50%, -100%); }
+.tree-ball span { position: absolute; top: 0; left: 0; display: block; width: 100%; aspect-ratio: 1/1; background: var(--color-fat-tuesday); border-radius: 50%; pointer-events: none; }
+.tree-ball span:not(:first-child) { opacity: 0; }
+.tree-wings { position: absolute; bottom: -1.22rem; left: 50%; width: 15.15rem; height: 5.04rem; max-height: 100vh; transform: translateX(-50%); opacity: 0; z-index: 1; }
+.tree-wings__item { position: absolute; }
+.tree-wings__item img { width: 100%; height: auto; }
+.tree-wings__center { top: 1.28rem; left: 50%; width: 1.34rem; transform: translateX(-50%); }
+.tree-wings__top-left { top: 0; left: 0; width: 7.05rem; transform-origin: center right; }
+.tree-wings__top-right { top: 0; right: 0; width: 7.05rem; transform-origin: center left; }
+.tree-wings__bottom-left { top: 2.586rem; left: 3.496rem; width: 3.9rem; transform-origin: top right; }
+.tree-wings__bottom-right { top: 2.586rem; right: 3.496rem; width: 3.9rem; transform-origin: top left; }
+
+/* ---------- sound button ---------- */
+.sound {
+  position: fixed; bottom: .63rem; right: .75rem; display: flex; align-items: center; justify-content: center; gap: .045rem;
+  width: .78rem; aspect-ratio: 1/1; background: var(--color-bashful-pancy); border: none; border-radius: 50%; cursor: pointer; overflow: hidden; z-index: 100;
+}
+.sound-item { width: .05rem; height: .17rem; border-radius: .03rem; background: var(--color-fat-tuesday); }
+.sound-item:nth-child(odd) { height: .27rem; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-wrapp">
+    <div class="header-left">
+      <div class="header-main">
+        <a href="#" class="header-logo">DevNest</a>
+        <div class="header-title">Gent. Developer pods in the green.</div>
+      </div>
+      <div class="header-search">
+        <div class="header-search__btn">
+          <svg viewBox="0 0 13 13" fill="none" stroke="#341F37" stroke-width="1.4" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4.5"/><path d="m9 9 3.5 3.5"/></svg>
+        </div>
+        <input type="text" class="header-search__input" placeholder="Search">
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="header-contact" type="button">Get in touch</button>
+      <button class="header-menu" type="button" aria-label="Menu">
+        <svg viewBox="0 0 15 10" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"><path d="M1 1h13M1 5h13M1 9h13"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" data-page-id="home">
+  <section class="banner">
+    <div class="banner-title banner-slide split">Building the future of <span>developer living.</span></div>
+    <div class="banner-subtitle banner-slide split">25 pods, one green campus</div>
+    <div class="banner-text banner-slide split">DevNest Gent offers compact developer pods surrounded by green space, with gigabit fibre, quiet desks and a community of builders. Shared kitchens, bike storage and a short walk to the city centre.</div>
+    <div class="banner-tree">
+      <video autoplay muted loop playsinline>
+        <source src="https://cdn.zajno.com/dev/codepen/cicada/cicada_tree.mov" type='video/mp4; codecs="hvc1"'>
+        <source src="https://cdn.zajno.com/dev/codepen/cicada/cicada_tree.webm" type="video/webm">
+      </video>
+    </div>
+  </section>
+
+  <section class="wings">
+    <div class="wings-svg">
+      <!-- simplified wing outline; paste your original wings <svg> here if you want the detailed one -->
+      <svg viewBox="0 0 1357 466" fill="none" stroke="#BEACC1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M677 215C560 60 200 20 20 120C50 290 380 360 677 250Z"/>
+        <path d="M680 215C797 60 1157 20 1337 120C1307 290 977 360 680 250Z"/>
+        <path d="M677 232C500 160 250 110 60 128M677 240C500 240 300 220 120 220M680 232C857 160 1107 110 1297 128M680 240C857 240 1057 220 1237 220"/>
+        <path d="M670 262C600 340 560 400 540 450M687 262C757 340 797 400 817 450"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="tree">
+    <div class="tree-name">Our stack</div>
+    <div class="tree-wrapp">
+      <svg class="tree-svg" viewBox="0 0 2556 3440" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="tree-svg__bottom" d="M1278.07 3439.61L1278.07 1717" stroke="#341F37" stroke-width="3.21"/>
+        <path class="tree-svg__top tree-svg__branches" data-position="top" d="M1278.07 1722.61L1278.07 0" stroke="#341F37" stroke-width="3.21"/>
+        <path class="tree-svg__left tree-svg__branches" data-position="left" d="M1278.07 1716.2L2 651.193" stroke="#341F37" stroke-width="3.21"/>
+        <path class="tree-svg__left-top tree-svg__branches" data-position="left-top" d="M1278.07 1716.2L552.609 176.432" stroke="#341F37" stroke-width="3.21"/>
+        <path class="tree-svg__right-top tree-svg__branches" data-position="right-top" d="M1278.08 1716.2L2002.43 176.432" stroke="#341F37" stroke-width="3.21"/>
+        <path class="tree-svg__right tree-svg__branches" data-position="right" d="M1278.07 1716.2L2554.09 651.193" stroke="#341F37" stroke-width="3.21"/>
+      </svg>
+      <div class="tree-circle tree-circle__big"></div>
+      <div class="tree-circle tree-circle__small"></div>
+      <div id="nodes" style="display:contents"></div> <!-- titles and balls are built by the script below -->
+      <div class="tree-wings">
+        <div class="tree-wings__item tree-wings__center"><img src="https://cdn.zajno.com/dev/codepen/cicada/butterfly-center.png" alt=""></div>
+        <div class="tree-wings__item tree-wings__top-left"><img src="https://cdn.zajno.com/dev/codepen/cicada/butterfly-top_left.png" alt=""></div>
+        <div class="tree-wings__item tree-wings__top-right"><img src="https://cdn.zajno.com/dev/codepen/cicada/butterfly-top_right.png" alt=""></div>
+        <div class="tree-wings__item tree-wings__bottom-left"><img src="https://cdn.zajno.com/dev/codepen/cicada/butterfly-bottom_left.png" alt=""></div>
+        <div class="tree-wings__item tree-wings__bottom-right"><img src="https://cdn.zajno.com/dev/codepen/cicada/butterfly-bottom_right.png" alt=""></div>
+      </div>
+    </div>
+  </section>
+
+  <button class="sound" type="button" aria-label="Toggle sound">
+    <span class="sound-item"></span><span class="sound-item"></span><span class="sound-item"></span><span class="sound-item"></span>
+  </button>
+  <audio id="audio" loop>
+    <source src="https://cdn.zajno.com/dev/motion/sounds/motion_bg_low_vol.mp3" type="audio/mp3">
+  </audio>
+</main>
+
+<!-- GSAP core + the plugins this page uses (all free since GSAP 3.13) -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Observer.min.js"></script>
+
+<script>
+/* build the five branch labels + balls (edit the text here) */
+(function () {
+  const decorL = '<svg class="tree-title__decor left" viewBox="0 0 10 3" fill="none"><path d="M10 1H3C1.9 1 1 1.9 1 3V3" stroke="#341F37"/></svg>';
+  const decorR = '<svg class="tree-title__decor right" viewBox="0 0 10 3" fill="none"><path d="M0 1H7C8.1 1 9 1.9 9 3V3" stroke="#341F37"/></svg>';
+  const nodes = [['left', 'Cloud'], ['left-top', 'Frontend'], ['top', 'Backend'], ['right-top', 'DevOps'], ['right', 'Data & AI']];
+  document.getElementById('nodes').innerHTML = nodes.map(([p, t]) =>
+    `<div class="tree-title tree-title_${p}" data-position="${p}">${decorL}<span>${t}</span>${decorR}</div>`).join('') +
+    nodes.map(([p]) =>
+    `<div class="tree-ball tree-ball_${p}" data-position="${p}"><span class="tree-ball__1"></span><span class="tree-ball__2"></span><span class="tree-ball__3"></span></div>`).join('');
+})();
+</script>
+
+<script>
+gsap.registerPlugin(Observer, SplitText, DrawSVGPlugin, MotionPathPlugin, ScrollTrigger, CustomEase);
+
+CustomEase.create('yButterfly', '.17,.17,.43,1');
+CustomEase.create('butterflyShow', '.17,.17,.46,1');
+CustomEase.create('butterflyDown', '.53,0,.49,1');
+CustomEase.create('butterflyUp', '.73,0,.41,1');
+CustomEase.create('yButterflyDown', '.68,0,.43,1');
+CustomEase.create('butterflyHide', '.68,0,0,1');
+CustomEase.create('clip', '.57,0,.43,1');
+
+window.addEventListener('load', function () {
+  let hoverActive = false;
+
+  /* split text into lines, wrap each line */
+  new SplitText('.split', { type: 'lines', linesClass: 'fade-overflow' });
+  document.querySelectorAll('.split .fade-overflow').forEach((line) => {
+    const html = line.innerHTML;
+    line.innerHTML = `<div class='fade-el'>${html}</div>`;
+  });
+
+  const sections = gsap.utils.toArray('.banner-slide');
+  const wrap = gsap.utils.wrap(0, sections.length);
+  const tree = document.querySelector('.banner-tree');
+  const wings = document.querySelector('.wings');
+  let currentIndex = 0;
+
+  const tl = gsap.timeline({
+    defaults: { duration: 1.2 },
+    scrollTrigger: {
+      trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: true,
+      onEnter: () => { hoverActive = false; },
+      onLeave: () => { window.scrollTo(0, 0); },
+    },
+  });
+
+  /* banner text slides: title -> subtitle -> text */
+  function gotoSection(index) {
+    index = wrap(index);
+    const cur = sections[currentIndex], next = sections[index];
+    const textCur = cur.querySelectorAll('.fade-overflow'), textNext = next.querySelectorAll('.fade-overflow');
+    tl.to(cur, { scale: 0.7, alpha: 0, ease: 'power0.easeIn' })
+      .to(textCur, { y: -350, stagger: { each: 0.02, from: 'start' }, ease: 'power0.easeIn' }, '<')
+      .to(tree, { scale: index > 0 ? 2.4 : 1, yPercent: index > 0 ? 125 : 0, duration: 0.8 }, '<')
+      .to(wings, { alpha: 0, duration: 0.8 }, '<')
+      .fromTo(textNext, { y: 400 }, { y: 0, stagger: { each: 0.02, from: 'start' }, ease: 'power1.easeOut' }, '<0.4')
+      .fromTo([next], { scale: 0.7, alpha: 0 }, { scale: 1, alpha: 1, ease: 'power1.easeOut' }, '<');
+    currentIndex = index;
+  }
+
+  /* tree diagram + butterfly + wipe back to the banner */
+  function treeAnimation() {
+    const W = (k) => '.tree-wings__' + k;
+    const branch = (sel, rot, origin, end, pos) =>
+      tl.fromTo(sel, { drawSVG: '0%', strokeWidth: 33, rotate: rot, transformOrigin: origin },
+                     { drawSVG: end, strokeWidth: 33, rotate: rot, transformOrigin: origin, duration: 0.5 }, pos);
+
+    tl.to('.banner-text', { y: '150%', alpha: 0, duration: 0.8 })
+      .to(tree, { scale: 1, yPercent: 0, duration: 0.8 }, '<')
+      .to(tree, { alpha: 0, duration: 0.4 }, '>-=0.15')
+      .set('.tree svg', { display: 'block' }, '<-=0.1')
+      .fromTo('.tree-svg__bottom', { drawSVG: '0%', strokeWidth: 33 }, { drawSVG: '100%', strokeWidth: 33, duration: 0.5 }, '<')
+      .fromTo('.tree-svg__top', { drawSVG: '0%', strokeWidth: 33 }, { drawSVG: '100%', strokeWidth: 33, duration: 0.5 });
+    branch('.tree-svg__left', '25deg', 'bottom right', '75%', '<');
+    branch('.tree-svg__right', '-25deg', 'bottom left', '75%', '<');
+    branch('.tree-svg__right-top', '-13deg', 'bottom left', '85%', '<');
+    branch('.tree-svg__left-top', '13deg', 'bottom right', '85%', '<');
+    tl.to('.tree-svg__branches', { drawSVG: '100%', strokeWidth: 3, rotate: '0', duration: 0.5 })
+      .to('.tree-svg__bottom', { strokeWidth: 3, duration: 0.5 }, '<')
+      .to('.tree-circle', { scale: 0.65, duration: 0.5 }, '<')
+      .set('.tree-circle__big', { boxShadow: '0 0 0 200px var(--color-fat-tuesday)' }, '<')
+      .to('.tree-circle__big', { boxShadow: '0 0 0 1px var(--color-fat-tuesday)', ease: 'power1.easeIn', duration: 0.5 }, '<')
+      .set('.tree-circle__small', { boxShadow: '0 0 0 200px var(--color-fat-tuesday)' }, '<')
+      .to('.tree-circle__small', { boxShadow: '0 0 0 3px var(--color-fat-tuesday)', ease: 'power1.easeIn', duration: 0.5 }, '<')
+      .to('.tree-circle__big', { scale: 1, duration: 0.4 })
+      .fromTo('.tree-name', { y: '-100%', opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, '<')
+      .fromTo('.tree-title span', { y: '100%', opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 })
+      .to('.tree-ball', { alpha: 1, scale: 1, duration: 0.4 }, '<')
+      .call(() => { hoverActive = true; })
+      .to('.tree-wings', { y: '-100%', alpha: 1, ease: 'yButterfly', duration: 0.8 }, '<-=1.5');
+
+    /* wings open: set a start angle, tween to the open angle */
+    [['top-left', -15, 10], ['top-right', 15, -10], ['bottom-left', -20, 15], ['bottom-right', 20, -15]].forEach(([k, a, b], i) => {
+      tl.set(W(k), { rotate: a + 'deg' }, i ? '<' : '<0.1')
+        .to(W(k), { rotate: b + 'deg', ease: 'butterflyShow', duration: 0.7 }, '<');
+    });
+    /* wings settle flat */
+    [['top-left', 0.74], ['top-right', 0.74], ['bottom-left', 0.56], ['bottom-right', 0.56]].forEach(([k, d], i) => {
+      tl.to(W(k), { rotate: 0, ease: 'butterflyDown', duration: d }, i ? '<' : '>');
+    });
+    tl.addPause('+=0.5')
+      .to(W('top-left'), { rotate: '28deg', ease: 'butterflyUp', duration: 0.55 })
+      .to(W('top-right'), { rotate: '-28deg', ease: 'butterflyUp', duration: 0.55 }, '<')
+      .to('.tree-wings', { y: '-90%', alpha: 1, duration: 0.54 }, '<0.03')
+      .to(W('bottom-left'), { rotate: '33deg', ease: 'yButterflyDown', duration: 0.54 }, '<')
+      .to(W('bottom-right'), { rotate: '-33deg', ease: 'yButterflyDown', duration: 0.54 }, '<')
+      .to('.tree-name', { y: '-100%', opacity: 0, duration: 0.4 })
+      .to('.tree-wings', { y: '-180%', alpha: 1, ease: 'butterflyUp', duration: 0.8 }, '<');
+    /* wings fly away */
+    [['top-left', -30], ['top-right', 30], ['bottom-left', -21], ['bottom-right', 21]].forEach(([k, r]) => {
+      tl.to(W(k), { rotate: r + 'deg', ease: 'butterflyHide', duration: 0.8 }, '<');
+    });
+
+    /* wipe: banner comes back, tree diagram leaves */
+    tl.set('.banner', { clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)' }, '<0.1')
+      .to('.banner', { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', ease: 'clip', duration: 0.8 }, '<')
+      .set('.tree', { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' }, '<')
+      .to('.tree', { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)', ease: 'clip', duration: 0.8 }, '<')
+      .set('.wings', { opacity: 1, clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)' }, '<')
+      .to('.wings', { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', ease: 'clip', duration: 0.8 }, '<')
+      .set('.banner-title .fade-overflow', { y: '150%', opacity: 0 }, '<')
+      .to('.banner-title .fade-overflow', { y: '0%', opacity: 1, duration: 1 }, '<')
+      .to('.banner-title', { opacity: 1, scale: 1, stagger: { each: 0.1, from: 'start' }, duration: 1 }, '<')
+      .set('.banner-tree', { scale: 1.3 }, '<')
+      .to('.banner-tree', { scale: 1, opacity: 1, duration: 1 }, '<');
+  }
+
+  sections.forEach((el, i) => { if (i != sections.length - 1) gotoSection(i + 1); });
+  treeAnimation();
+
+  document.querySelector('.header-logo').addEventListener('click', (e) => { e.preventDefault(); location.reload(); });
+
+  /* hover effects on the branch labels */
+  const tlCircles = gsap.timeline({ paused: true })
+    .fromTo('.tree-circle__big', { boxShadow: '0 0 0 1px rgb(52 31 55)' }, { duration: 0.4, ease: 'power1.outIn', boxShadow: '0 0 0 3px rgb(52 31 55)' })
+    .fromTo('.tree-circle__small', { boxShadow: '0 0 0 3px rgb(52 31 55)' }, { duration: 0.4, ease: 'power1.outIn', boxShadow: '0 0 0 1px rgb(52 31 55)' }, '<');
+
+  document.querySelectorAll('.tree-title').forEach((el) => {
+    const pos = el.getAttribute('data-position');
+    const title = `.tree-title[data-position="${pos}"]`, ball = `.tree-ball[data-position="${pos}"]`, path = `.tree-svg__branches[data-position="${pos}"]`;
+    let endSmall = 0.125, endBig = 0.535;
+    if (pos.includes('-top')) { endSmall = 0.155; endBig = 0.58; }
+    else if (pos.includes('top')) { endSmall = 0.175; endBig = 0.597; }
+    const mp = (end) => ({ path, align: path, autoRotate: true, alignOrigin: [1, 0.5], start: 1, end });
+
+    const hover = gsap.timeline({ paused: true })
+      .to(title, { duration: 0.4, ease: 'power1.inOut', scale: 1.33, y: '-=30%' })
+      .to(`${ball} .tree-ball__1`, { duration: 0.4, ease: 'power1.inOut', scale: 2.25 }, '<')
+      .to(path, { duration: 0.4, ease: 'power1.inOut', strokeWidth: 9 }, '<')
+      .set(`${ball} .tree-ball__2`, { opacity: 1 })
+      .set(`${ball} .tree-ball__3`, { opacity: 1 })
+      .to(`${title} .tree-title__decor.left`, { duration: 0.4, ease: 'power1.inOut', alpha: 1, x: '-100%' })
+      .to(`${title} .tree-title__decor.right`, { duration: 0.4, ease: 'power1.inOut', alpha: 1, x: '100%' }, '<')
+      .to(`${ball} .tree-ball__2`, { duration: 0.7, ease: 'power1.inOut', motionPath: mp(endSmall) }, '<')
+      .to(`${ball} .tree-ball__3`, { duration: 0.4, ease: 'power1.inOut', motionPath: mp(endBig) }, '<0.3');
+
+    el.addEventListener('mouseover', () => { if (hoverActive) { hover.play(); tlCircles.play(); } });
+    el.addEventListener('mouseout', () => { hover.reverse(); tlCircles.reverse(); });
+    const b = document.querySelector(ball);
+    b.addEventListener('mouseover', () => { if (hoverActive) hover.play(); });
+    b.addEventListener('mouseout', () => { hover.reverse(); });
+  });
+
+  /* sound button: animated bars + audio */
+  const bars = (sel, h, d) => gsap.timeline({ paused: true, yoyo: true, repeat: -1 }).to(sel, { height: h, duration: d });
+  const tlSound = bars('.sound-item:nth-child(even)', '0.27rem', 0.5);
+  const tlSound2 = bars('.sound-item:nth-child(odd)', '0.17rem', 0.45);
+  const audio = document.querySelector('#audio');
+
+  document.querySelector('.sound').addEventListener('click', function () {
+    const on = this.classList.toggle('active');
+    if (on) { tlSound.resume(); tlSound2.resume(); audio.play().catch(() => {}); }
+    else { tlSound.pause(); tlSound2.pause(); audio.pause(); }
+  });
+});
+</script>
+</body>
+</html>

@@ -31,7 +31,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           href="/products"
           className="text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Terug naar producten
+          ←Back tr produts
         </Link>
       </div>
 
@@ -72,14 +72,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 variant="outline"
                 className="text-green-600 border-green-600/50"
               >
-                Op voorraad
+                In stock
               </Badge>
             ) : (
               <Badge
                 variant="outline"
                 className="text-red-600 border-red-600/50"
               >
-                Uitverkocht
+                Sold out
               </Badge>
             )}
           </div>
@@ -87,7 +87,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <AddToCartButton product={product} />
             <button className="inline-flex h-11 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">
-              Favoriet
+              Favorites
             </button>
           </div>
         </div>

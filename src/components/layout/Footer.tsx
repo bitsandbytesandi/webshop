@@ -10,18 +10,18 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-3">
-            <h3 className="text-lg font-bold">ELITE</h3>
+            <h3 className="text-lg font-bold">WELCOME</h3>
             <p className="text-sm text-muted-foreground">
-              Premium custom webshops. Gebouwd om te schalen.
+              Premium custom webshops. Built to scale.
             </p>
           </div>
 
           <div className="space-y-3">
             <h4 className="text-sm font-semibold">Shop</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/products" className="hover:text-foreground">Alle producten</Link></li>
-              <li><Link href="/collections" className="hover:text-foreground">Collecties</Link></li>
-              <li><Link href="/new" className="hover:text-foreground">Nieuw</Link></li>
+              <li><Link href="/products" className="hover:text-foreground">All products</Link></li>
+              <li><Link href="/collections" className="hover:text-foreground">Collections</Link></li>
+              <li><Link href="/new" className="hover:text-foreground">New</Link></li>
             </ul>
           </div>
 
@@ -30,7 +30,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
               <li><Link href="/faq" className="hover:text-foreground">FAQ</Link></li>
-              <li><Link href="/shipping" className="hover:text-foreground">Verzending</Link></li>
+              <li><Link href="/shipping" className="hover:text-foreground">Shipping</Link></li>
             </ul>
           </div>
 
@@ -38,13 +38,13 @@ export function Footer() {
             <h4 className="text-sm font-semibold">Legal</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/privacy" className="hover:text-foreground">Privacy</Link></li>
-              <li><Link href="/terms" className="hover:text-foreground">Voorwaarden</Link></li>
+              <li><Link href="/terms" className="hover:text-foreground">Terms</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 border-t pt-6 text-center text-sm text-muted-foreground">
-          © {year} Elite Webshop. Alle rechten voorbehouden.
+          © {year} Elite Webshop. All rights reserved.
         </div>
       </div>
     </footer>

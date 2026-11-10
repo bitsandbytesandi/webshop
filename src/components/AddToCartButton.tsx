@@ -14,7 +14,7 @@ export function AddToCartButton({ product }: { product: Product }) {
       disabled={!product.inStock}
       onClick={() => addItem(product)}
     >
-      {product.inStock ? "In winkelwagen" : "Uitverkocht"}
+      {product.inStock ? "In shopping cart" : "Sold out"}
     </Button>
   )
 }

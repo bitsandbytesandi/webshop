@@ -16,12 +16,12 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
-        <h1 className="text-3xl font-bold mb-4">Geen producten in je winkelwagen</h1>
+        <h1 className="text-3xl font-bold mb-4">No products in storecart</h1>
         <p className="text-muted-foreground mb-8">
-          Voeg eerst producten toe voordat je kunt afrekenen.
+          First add products before you can checkout.
         </p>
         <Link href="/products">
-          <Button size="lg">Terug naar de shop</Button>
+          <Button size="lg">Back to the shop</Button>
         </Link>
       </div>
     )
@@ -45,19 +45,19 @@ export default function CheckoutPage() {
         // Redirect naar Stripe Checkout
         window.location.href = data.url
       } else {
-        alert(data.error || "Er ging iets mis bij het starten van de betaling")
+        alert(data.error || "Something went wrong while starting the payment ")
         setIsSubmitting(false)
       }
     } catch (error) {
       console.error("Checkout error:", error)
-      alert("Er ging iets mis. Probeer het opnieuw.")
+      alert("Somethin went wrong. Please try again.")
       setIsSubmitting(false)
     }
   }
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold tracking-tight mb-10">Afrekenen</h1>
+      <h1 className="text-3xl font-bold tracking-tight mb-10">To settle</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Formulier (links) */}
@@ -65,16 +65,16 @@ export default function CheckoutPage() {
           {/* Contactgegevens */}
           <Card>
             <CardHeader>
-              <CardTitle>Contactgegevens</CardTitle>
+              <CardTitle>Contact details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">Voornaam</Label>
+                  <Label htmlFor="firstName">Firstname</Label>
                   <Input id="firstName" placeholder="Jan" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Achternaam</Label>
+                  <Label htmlFor="lastName">Lastname</Label>
                   <Input id="lastName" placeholder="de Vries" />
                 </div>
               </div>
@@ -83,7 +83,7 @@ export default function CheckoutPage() {
                 <Input id="email" type="email" placeholder="jan@email.nl" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefoonnummer</Label>
+                <Label htmlFor="phone">Phone number</Label>
                 <Input id="phone" type="tel" placeholder="06 12345678" />
               </div>
             </CardContent>
@@ -92,25 +92,25 @@ export default function CheckoutPage() {
           {/* Verzendadres */}
           <Card>
             <CardHeader>
-              <CardTitle>Verzendadres</CardTitle>
+              <CardTitle>Shipping asddress</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="address">Adres + huisnummer</Label>
+                <Label htmlFor="address">Address + house number</Label>
                 <Input id="address" placeholder="Hoofdstraat 12" />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="postal">Postcode</Label>
+                  <Label htmlFor="postal">Zip code</Label>
                   <Input id="postal" placeholder="1234 AB" />
                 </div>
                 <div className="space-y-2 sm:col-span-2">
-                  <Label htmlFor="city">Plaats</Label>
+                  <Label htmlFor="city">Place</Label>
                   <Input id="city" placeholder="Amsterdam" />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="country">Land</Label>
+                <Label htmlFor="country">Country</Label>
                 <Input id="country" defaultValue="Nederland" />
               </div>
             </CardContent>
@@ -167,17 +167,17 @@ export default function CheckoutPage() {
                 disabled={isSubmitting}
                 onClick={handleCheckout}
               >
-                {isSubmitting ? "Doorsturen naar Stripe..." : "Betaal met Stripe"}
+                {isSubmitting ? "Sending to Stripe..." : "Pay with Stripe"}
               </Button>
 
               <Link href="/cart" className="block">
                 <Button variant="outline" className="w-full" type="button">
-                  Terug naar winkelwagen
+                  Back to storecart
                 </Button>
               </Link>
 
               <p className="text-xs text-center text-muted-foreground pt-2">
-                Je wordt veilig doorgestuurd naar Stripe om te betalen.
+                You will be securely redirected to Stripe to pay.
               </p>
             </div>
           </div>

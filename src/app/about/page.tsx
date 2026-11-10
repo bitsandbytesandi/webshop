@@ -7,35 +7,35 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-16 md:py-24">
       <div className="max-w-3xl mx-auto">
         <Badge variant="secondary" className="mb-6">
-          Over dit project
+          About this project
         </Badge>
  
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
-          Gebouwd als bewijs
+          Build as evidence
         </h1>
 
         <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6 text-muted-foreground leading-relaxed">
           <p className="text-lg">
-            Deze webshop is niet zomaar een demo. Het is een bewuste technische fundering
-            die laat zien wat er mogelijk is wanneer je vanaf de basis goed bouwt.
+            This webshop is not just a demo. It is a conscious technical foundation 
+            that shows what is possible when you build well from the ground up
           </p>
 
           <p>
-            Van productbeheer tot winkelwagen en checkout - alles is zo opgezet 
-            dat het later makkelijk uitgebreid kan worden met echte betalingen,
-            een database, admin panel of multi-tenant functionaliteit.
+            From product management to shopping cart and checkout - everything is set up in no time 
+            that it can easily be expanded later with real payments, 
+            a database, admin panel or multi-tenant functionality.
           </p>
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-4">
           <Link href="/products">
             <Button size="lg">
-              Bekijk de producten
+              Watch products
             </Button>
           </Link>
           <Link href="/contact">
             <Button size="lg" variant="outline">
-              Neem contact op 
+              Contact 
             </Button>
           </Link>
         </div>

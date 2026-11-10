@@ -20,11 +20,11 @@ export default function ContactPage() {
   if (submitted) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
-        <h1 className="text-3xl font-bold mb-4">Bedankt voor je bericht!</h1>
+        <h1 className="text-3xl font-bold mb-4">Thanks for the message!</h1>
         <p className="text-muted-foreground mb-8">
-          Ik neem zo snel mogelijk contact met je op.
+          I will contact u as soon as possible.
         </p>
-        <Button onClick={() => setSubmitted(false)}>Nog een bericht sturen</Button>
+        <Button onClick={() => setSubmitted(false)}>Send another message</Button>
       </div>
     )
   }
@@ -37,41 +37,41 @@ export default function ContactPage() {
             Contact
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight mb-4">
-            Laten we praten
+            Let's talk
           </h1>
           <p className="text-muted-foreground">
-            Heb je een vraag over dit project of wil je zelf een webshop laten bouwen?
+            Do you've got a question about this project or do u want to build a webshop yourself?
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Stuur een bericht</CardTitle>
+            <CardTitle>Send a message</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="name">Naam</Label>
-                <Input id="name" placeholder="Jouw naam" required />
+                <Input id="name" placeholder="Your name" required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="email">E-mail</Label>
-                <Input id="email" type="email" placeholder="jouw@email.nl" required />
+                <Input id="email" type="email" placeholder="your@email.example" required />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="message">Bericht</Label>
+                <Label htmlFor="message">Message</Label>
                 <Textarea
                   id="message"
-                  placeholder="Vertel me waar je mee geholpen wilt worden..."
+                  placeholder="Tell us what u want to be helped with..."
                   rows={5}
                   required
                 />
               </div>
 
               <Button type="submit" className="w-full" size="lg">
-                Bericht versturen
+                Send message
               </Button>
             </form>
           </CardContent>

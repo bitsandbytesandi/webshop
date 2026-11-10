@@ -39,10 +39,10 @@ export function Header() {
             Home
           </Link>
           <Link href="/products" className="transition-colors hover:text-foreground/80">
-            Producten
+            Products
           </Link>
           <Link href="/about" className="transition-colors hover:text-foreground/80">
-            Over ons
+            About us
           </Link>
           <Link href="/contact" className="transition-colors hover:text-foreground/80">
             Contact
@@ -107,7 +107,7 @@ export function Header() {
                   href="/cart"
                   className="text-lg font-medium transition-colors hover:text-primary"
                 >
-                  Winkelwagen {mounted && totalItems > 0 ? `(${totalItems})` : ""}
+                  ShoppingCart {mounted && totalItems > 0 ? `(${totalItems})` : ""}
                 </Link>
               </nav>
             </SheetContent>

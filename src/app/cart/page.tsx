@@ -11,11 +11,11 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
-        <h1 className="text-3xl font-bold mb-4">Je winkelwagen is leeg</h1>
-        <p className="text-muted-foreground mb-8">Voeg wat mooie producten toe.</p>
+        <h1 className="text-3xl font-bold mb-4">Your shopping cart is empty</h1>
+        <p className="text-muted-foreground mb-8">Add some nice products.</p>
         <Link href="/products">
           <Button size="lg">
-            Verder winkelen
+            Continue shopping
           </Button>
         </Link>
       </div>
@@ -25,9 +25,9 @@ export default function CartPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="flex items-center justify-between mb-10">
-        <h1 className="text-3xl font-bold tracking-tight">Winkelwagen</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Shopping cart</h1>
         <Button variant="ghost" onClick={clearCart}>
-          Leegmaken
+          Empty
         </Button>
       </div>
 
@@ -73,7 +73,7 @@ export default function CartPage() {
                       className="text-sm text-muted-foreground hover:text-destructive"
                       onClick={() => removeItem(item.product.id)}
                     >
-                      Verwijderen
+                      Remove
                     </button>
                   </div>
                 </div>

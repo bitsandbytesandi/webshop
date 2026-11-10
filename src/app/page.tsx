@@ -45,15 +45,15 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9]">
-              <span className="block text-neutral-900">ELITE</span>
+              <span className="block text-neutral-900">WELCOME</span>
               <span className="block mt-3 text-[0.42em] tracking-[0.18em] font-medium animate-gold-pulse">
                 THE DEVELOPER&apos;S GOLDEN ERA
               </span>
             </h1>
 
             <p className="mt-10 max-w-xl mx-auto text-base md:text-lg text-neutral-500 leading-relaxed">
-              Een zelf-herstellende, schaalbare Next.js fundering.  
-              Gebouwd om websites te maken die voelen alsof ze €5000 waard zijn.
+              A self-healing, scalable Next.js foundation to be technical here .
+              What we really do is building foundations that last!!
             </p>
 
             <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
@@ -62,7 +62,7 @@ export default function HomePage() {
                   size="lg"
                   className="h-13 px-9 rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 hover:scale-[1.02]"
                 >
-                  Betreed de winkel
+                  Enter the store
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -72,7 +72,7 @@ export default function HomePage() {
                   variant="outline"
                   className="h-13 px-9 rounded-full border-neutral-300 text-neutral-700 hover:bg-neutral-50"
                 >
-                  Over dit project
+                  About this project
                 </Button>
               </Link>
             </div>
@@ -89,12 +89,12 @@ export default function HomePage() {
                 Selected work
               </p>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900">
-                Uitgelichte stukken
+               Example Projects
               </h2>
             </div>
             <Link href="/products">
               <Button variant="ghost" className="group text-neutral-500 hover:text-neutral-900">
-                Alles bekijken
+                Watch everything
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -126,14 +126,14 @@ export default function HomePage() {
             </p>
 
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 mb-5">
-              Klaar om iets  
+              Build something 
               <span className="animate-gold-pulse"> timeless </span>
-              te bouwen?
+              Contact us
             </h2>
 
             <p className="text-neutral-500 max-w-md mx-auto mb-10 leading-relaxed">
-              Dit project is bewijs van wat er mogelijk is met een sterke technische fundering.  
-              Geen templates. Alleen pure craft.
+              This project proves what is possible with a good technical foundation,
+              no templates only Craft&Skills!
             </p>
 
             <Link href="/contact">
@@ -141,7 +141,7 @@ export default function HomePage() {
                 size="lg"
                 className="h-13 px-11 rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 hover:scale-[1.02]"
               >
-                Neem contact op
+                Contact us
               </Button>
             </Link>
           </div>

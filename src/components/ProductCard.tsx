@@ -34,7 +34,7 @@ export function ProductCard({ product }: ProductCardProps) {
           />
           {!product.inStock && (
             <Badge variant="secondary" className="absolute top-3 left-3 z-10">
-              Uitverkocht
+              Sold out
             </Badge>
           )}
         </div>
@@ -65,7 +65,7 @@ export function ProductCard({ product }: ProductCardProps) {
           disabled={!product.inStock}
           onClick={() => addItem(product)}
         >
-          {product.inStock ? "Toevoegen" : "Uitverkocht"}
+          {product.inStock ? "Add" : "Sold out"}
         </Button>
       </CardFooter>
     </Card>

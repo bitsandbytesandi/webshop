@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
 export const metadata: Metadata = {
   title: "Elite Webshop | Portfolio Proof",
-  description: "premium custom webshop foundation - gebouwd voor schaal en waarde",
+  description: "premium custom webshop foundation - Built for scale and value",
 }
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="nl" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
-        <div className="relative flex min-h-screen flex-col"> 
+        <div className="relative flex min-h-screen flex-col">
           <Header  />
           <main className="flex-1">{children}</main>
           <Footer />
@@ -29,3 +29,4 @@ export default function RootLayout({
     </html>
   )
 }
+
